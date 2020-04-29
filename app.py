@@ -1,16 +1,18 @@
 from flask import Flask
 from json import dumps
-import controllers
+from controllers import init_app
+from config import config
 from db import DB
 
 
 def create_app():
     app = Flask(__name__)
 
-    DB.create_db(app)
+    init_app(app)
 
-    for bp in controllers.blueprint_list:
-        app.register_blueprint(bp)
+    app.config.from_mapping(config)
+
+    DB.create_db(app)
 
     @app.route('/')
     def hello_world():
