@@ -1,5 +1,8 @@
 from lib import code
 from flask import jsonify
+from flask_wtf.csrf import CSRFProtect
+
+csrf = CSRFProtect()
 
 
 def response(c: code.CodeWithMessage, data=None):
@@ -8,3 +11,4 @@ def response(c: code.CodeWithMessage, data=None):
         'msg': c.msg,
         'data': data
     })
+

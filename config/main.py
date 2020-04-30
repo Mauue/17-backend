@@ -3,7 +3,7 @@ from settings import *
 
 config.update(
     {
-        "DB_URL": 'mysql+mysqlconnector://{}:{}@{}:{}/{}'.format(
+        "SQLALCHEMY_DATABASE_URI": 'mysql+mysqlconnector://{}:{}@{}:{}/{}'.format(
             DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
 
     }
