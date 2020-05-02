@@ -1,5 +1,5 @@
 export FLASK_APP=app
-"/usr/local/bin/python3" -m pip install -r requirements
+python3 -m pip install -r requirements
 
 old_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
 echo "old_pid=${old_pid}"
