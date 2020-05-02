@@ -1,33 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
+from .db import DB
+from .redis import Redis
 
-
-class DB:
-    _instance = None
-
-    def __init__(self, app):
-        self.db = SQLAlchemy(app)
-
-    def test(self):
-        return id(self)
-
-    @classmethod
-    def create_db(cls, app):
-        if DB._instance is None:
-            DB._instance = DB(app)
-
-    @classmethod
-    def instance(cls, app=None):
-        if DB._instance is None:
-            DB._instance = DB(app)
-        return DB._instance
-
-    @classmethod
-    def get_db(cls):
-        return cls.instance().db
+db = DB().client
+red = Redis()
 
 
 def db_init_app(app):
-    @app.cli.command('init-db')
-    def _():
-        DB.get_db().create_all()
+    db.init_app(app)
+    red.init_app(app)
 
+    @app.cli.command('init-db')
+    def create_table():
+        db.drop_all()
+        db.create_all()
+        print("初始化完成")

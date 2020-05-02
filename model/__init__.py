@@ -1,3 +1,3 @@
-from db import DB
-
-db = DB.instance().get_db()
+from db import db, red
+db = db
+red = red
