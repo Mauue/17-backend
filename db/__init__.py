@@ -26,3 +26,8 @@ class DB:
         return cls.instance().db
 
 
+def db_init_app(app):
+    @app.cli.command('init-db')
+    def _():
+        DB.get_db().create_all()
+

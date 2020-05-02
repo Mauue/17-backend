@@ -2,7 +2,7 @@ from flask import Flask
 from json import dumps
 from controllers import init_app
 from config import config
-from db import DB
+from db import db_init_app
 
 
 def create_app():
@@ -12,19 +12,7 @@ def create_app():
 
     app.config.from_mapping(config)
 
-    DB.create_db(app)
-
-    @app.route('/')
-    def hello_world():
-        return 'Hello World!'
-
-    @app.route('/test')
-    def test():
-        return dumps({
-            'status': 0,
-            'msg': 'ok',
-            'data': None
-        })
+    db_init_app(app)
 
     return app
 
