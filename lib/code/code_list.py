@@ -9,8 +9,8 @@ NoLogin = CodeWithMessage(-102, '未登录')
 
 
 # 用户模块
-PhoneFormatWrong = CodeWithMessage(1001, '手机号格式错误')
-EmailFormatWrong = CodeWithMessage(1002, '邮箱格式错误')
+PhoneFormatWrong = CodeWithMessage(1001, '邮箱格式错误')
+EmailFormatWrong = CodeWithMessage(1002, '手机号格式错误')
 PasswordFormatWrong = CodeWithMessage(1003, '密码格式错误')
 PhoneNoExists = CodeWithMessage(1004, '手机号不存在')
 EmailNoExists = CodeWithMessage(1005, '邮箱不存在')
