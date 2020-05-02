@@ -1,6 +1,5 @@
-sudo apt-get install python-pip
 export FLASK_APP=app
-python -m pip install -r requirements
+"/usr/local/bin/python3" -m pip install -r requirements
 
 old_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
 echo "old_pid=${old_pid}"
@@ -17,7 +16,7 @@ else
     fi
 fi
 echo "Starting Process...."
-nohup python -m flask run --port 9999
+nohup "/usr/local/bin/python3" -m flask run --port 9999
 new_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
 if [ -z ${new_pid} ];then
     echo "Restart Fail !"
