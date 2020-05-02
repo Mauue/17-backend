@@ -1,4 +1,7 @@
+sudo apt-get install python-pip
 export FLASK_APP=app
+python -m pip install -r requirements
+
 old_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
 echo "old_pid=${old_pid}"
 if [ -z $old_pid ];then
