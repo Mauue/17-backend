@@ -1,26 +1,3 @@
-export FLASK_APP=app
-python3 -m pip install -r requirements
-
-old_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
-echo "old_pid=${old_pid}"
-if [ -z $old_pid ];then
-    echo "Process Non-existent !"
-else
-    kill -9 ${old_pid}
-    mid_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
-    if [ -z ${mid_pid} ];then
-        echo "Process Close Success !"
-    else
-        echo "Process Close Fail !"
-        exit 1
-    fi
-fi
-echo "Starting Process...."
-nohup "/usr/local/bin/python3" -m flask run --port 9999
-new_pid=$(ps ax|grep flask|grep -v grep|awk '{print $1}')
-if [ -z ${new_pid} ];then
-    echo "Restart Fail !"
-else
-    echo "Restart Success !"
-    echo "new_pid=${new_pid}"
-fi
+git pull
+ps -A|grep flask|xargs kill -9
+nohup flask run --host 0.0.0.0 --port 9999 &
