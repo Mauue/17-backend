@@ -12,7 +12,7 @@ def _save_session(user_id):
 
 def get_login_user():
     user_id = session.get("user")
-    user = User.query.filter_by(id=user_id).first()
+    user = User.get_user_by_id(user_id)
     if user is None:
         g.user = None
     else:
@@ -40,7 +40,7 @@ def register_by_phone(phone, password, username):
 
     user = User.query.filter_by(tel=phone).first()
     if user:
-        return code_list.EmailExists
+        return code_list.PhoneExists
 
     user = User(tel=phone, password=generate_password_hash(password), username=username)
     user.create_new_account()

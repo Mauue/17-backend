@@ -12,6 +12,6 @@ def db_init_app(app):
 
     @app.cli.command('init-db')
     def create_table():
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
         print("初始化完成")

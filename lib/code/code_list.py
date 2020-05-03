@@ -6,7 +6,7 @@ OtherError = CodeWithMessage(-1, '系统错误')
 ParamsWrong = CodeWithMessage(-100, '参数错误')
 CSRFError = CodeWithMessage(-101, '认证失败')
 NoLogin = CodeWithMessage(-102, '未登录')
-
+OperatorError = CodeWithMessage(-103, '错误操作')
 
 # 用户模块
 PhoneFormatWrong = CodeWithMessage(1002, '手机号格式错误')
@@ -18,3 +18,14 @@ PasswordWrong = CodeWithMessage(1006, '密码错误')
 EmailExists = CodeWithMessage(1007, '邮箱已存在')
 PhoneExists = CodeWithMessage(1008, '手机号已存在')
 UsernameFormatWrong = CodeWithMessage(1009, '用户名含非法字符')
+UserNotExist = CodeWithMessage(1010, '用户不存在')
+
+
+# 项目模块
+ProjectNoExists = CodeWithMessage(2001, '项目不存在')
+NotPermission = CodeWithMessage(2002, '无权访问该项目')
+NotProjectAdmin = CodeWithMessage(2003, '非项目管理员')
+NotProjectOriginator = CodeWithMessage(2004, '非项目创建者')
+InProject = CodeWithMessage(2005, '成员已经加入项目')
+NotInProject = CodeWithMessage(2006, '成员未加入项目')
+
