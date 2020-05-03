@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+from .schedule import schedule_bp
 from .task import task_bp
 from .test import bp as test_bp
 from .user import user_bp
@@ -8,7 +9,7 @@ from .project import project_bp
 from flask.json import JSONEncoder
 from datetime import datetime
 
-blueprint_list = [test_bp, user_bp, project_bp, task_bp]
+blueprint_list = [test_bp, user_bp, project_bp, task_bp, schedule_bp]
 
 
 class _CustomJSONEncoder(JSONEncoder):

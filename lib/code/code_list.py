@@ -32,4 +32,8 @@ NotInProject = CodeWithMessage(2006, '成员未加入项目')
 
 # 任务模块
 TaskNoExists = CodeWithMessage(3001, '任务不存在')
-LabelTooLong = CodeWithMessage(3002, '标签过长')
+
+
+# 其他模块
+LabelTooLong = CodeWithMessage(9001, '标签过长')
+

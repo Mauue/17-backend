@@ -93,3 +93,16 @@ class Project(db.Model):
             for task in self.tasks
         ]
 
+    def get_schedule_list(self):
+        return [
+            {
+                "id": s.id,
+                "content": s.content,
+                "remarks": s.remarks,
+                "t_set": s.t_set,
+                "t_remind": s.t_remind,
+                "creator_id": s.user_id,
+                "label": s.label
+            }
+            for s in self.schedules
+        ]
