@@ -44,3 +44,8 @@ class User(db.Model):
     def create_new_account(self):
         db.session.add(self)
         db.session.commit()
+
+    def project_list(self):
+        ps = self.projects.all()
+        return [{"id": p.id, "name": p.name} for p in ps]
+

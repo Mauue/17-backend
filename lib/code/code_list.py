@@ -29,3 +29,7 @@ NotProjectOriginator = CodeWithMessage(2004, '非项目创建者')
 InProject = CodeWithMessage(2005, '成员已经加入项目')
 NotInProject = CodeWithMessage(2006, '成员未加入项目')
 
+
+# 任务模块
+TaskNoExists = CodeWithMessage(3001, '任务不存在')
+LabelTooLong = CodeWithMessage(3002, '标签过长')

@@ -10,6 +10,7 @@ pu = db.Table('project_user',
 
 
 class Project(db.Model):
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -73,3 +74,22 @@ class Project(db.Model):
         self.members.remove(user)
         db.session.add(self)
         db.session.commit()
+
+    def get_task_list(self):
+        return [
+            {
+                "id": task.id,
+                "name": task.name,
+                "remarks": task.remarks,
+                "finish": task.finish,
+                "originator_id": task.user_id,
+                "t_begin": task.t_begin,
+                "t_end": task.t_end,
+                "priority": task.priority,
+                "label": task.label,
+                "participants_id": [p.id for p in task.participants]
+
+            }
+            for task in self.tasks
+        ]
+

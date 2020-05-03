@@ -1,32 +1,46 @@
 from . import db
 
+tu = db.Table('task_user',
+              db.Column('task_id', db.Integer, db.ForeignKey('task.id')),
+              db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+              )
+
 
 class Task(db.Model):
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(100), nullable=False)
     remarks = db.Column(db.Text)
-    completion = db.Column(db.Boolean, nullable=False)
-    user_id = db.Column(db.Integer)
+    finish = db.Column(db.Boolean, default=False)
     t_begin = db.Column(db.TIMESTAMP)
     t_end = db.Column(db.TIMESTAMP)
     priority = db.Column(db.SmallInteger)
-    warn = db.Column(db.SmallInteger)
-    label = db.Column(db.Text)
-    t_create = db.Column(db.TIMESTAMP)
-    t_update = db.Column(db.TIMESTAMP)
-    t_delete = db.Column(db.TIMESTAMP)
+    label = db.Column(db.Text, default="")
+    t_create = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    t_update = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now())
+    t_delete = db.Column(db.TIMESTAMP, default=None)
 
-    def __init__(self, name, remarks, completion, user_id, t_begin, t_end, priority, warn, label, t_create, t_update, t_delete):
+    project = db.relationship("Project", backref="tasks")
+    originator = db.relationship("User", backref="task_originator")
+    participants = db.relationship('User', secondary=tu,
+                                   backref=db.backref('tasks', lazy='dynamic'))
+
+    def __init__(self, name, project_id, user_id, remarks=None, t_begin=None, t_end=None,
+                 priority=None, label=None):
         self.name = name
-        self.remarks = remarks
-        self.completion = completion
         self.user_id = user_id
+        self.project_id = project_id
+        self.remarks = remarks
         self.t_begin = t_begin
         self.t_end = t_end
         self.priority = priority
-        self.warn = warn
         self.label = label
-        self.t_create = t_create
-        self.t_update = t_update
-        self.t_delete = t_delete
 
+    @staticmethod
+    def new_task(name, project_id, user_id, **kwargs):
+        task = Task(name, project_id, user_id, **kwargs)
+        db.session.add(task)
+        db.session.commit()
+        return task

@@ -9,3 +9,4 @@ class ProjectCreateForm(FlaskForm):
 
 class ProjectMemberManageForm(FlaskForm):
     id = IntegerField('id', validators=[validators.DataRequired()])
+

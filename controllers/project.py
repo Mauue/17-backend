@@ -67,3 +67,9 @@ def project_remove_user(_project_id):
     c = service.project_member_manage(pid, form.id.data, user, is_add=False)
     return response(c)
 
+
+@project_bp.route('/user/project')
+@login_user_required
+def project_list():
+    user = g.user
+    return response(code_list.Success, user.project_list())
