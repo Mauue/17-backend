@@ -29,6 +29,7 @@ class Project(db.Model):
     def create_new_project(self):
         db.session.add(self)
         db.session.commit()
+        return self.id
 
     def get_project_member_list(self):
         members = [

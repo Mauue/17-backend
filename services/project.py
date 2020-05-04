@@ -5,7 +5,8 @@ from model.user import User
 
 def new_project(name, user_id):
     p = Project(name, user_id)
-    p.create_new_project()
+    id = p.create_new_project()
+    return id
 
 
 def project_info(project_id, user):
