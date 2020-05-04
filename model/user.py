@@ -47,5 +47,7 @@ class User(db.Model):
 
     def project_list(self):
         ps = self.projects.all()
-        return [{"id": p.id, "name": p.name} for p in ps]
+        pc = self.project_create
+        return [{"id": p.id, "name": p.name, "identity": "member"} for p in ps] + \
+                [{"id": p.id, "name": p.name, "identity": "originator"} for p in pc]
 
