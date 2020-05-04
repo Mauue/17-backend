@@ -21,14 +21,22 @@ def project_info(project_id, user):
     }
 
 
-def project_member_manage(project_id, member_id, admin, is_add=True):
+def project_member_manage(project_id, account, admin, is_add=True, account_type="id"):
     p = Project.get_project_by_id(project_id)
     if p is None:
         return code_list.ProjectNoExists
     if not p.is_project_member(admin, is_admin=True):
         return code_list.NotProjectAdmin
 
-    user = User.get_user_by_id(member_id)
+    if account_type == "email":
+        user = User.get_user_by_email(account)
+    elif account_type == "phone":
+        user = User.get_user_by_phone(account)
+    elif account_type == "id":
+        user = User.get_user_by_id(account)
+    else:
+        return code_list.ParamsWrong.with_message("未开放类型")
+
     if user is None:
         return code_list.UserNotExist
 

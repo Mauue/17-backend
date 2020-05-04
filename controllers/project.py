@@ -42,11 +42,11 @@ def project_add_user(_project_id):
 
     form = ProjectMemberManageForm()
     if not form.validate_on_submit():
-        return response(code_list.ParamsWrong)
+        return response(code_list.ParamsWrong.with_message(form.errors))
 
     user = g.user
-
-    c = service.project_member_manage(pid, form.id.data, user)
+    c = service.project_member_manage(project_id=pid, account=form.account.data,
+                                      admin=user, account_type=form.account_type.data)
     return response(c)
 
 
