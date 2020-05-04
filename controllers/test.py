@@ -37,3 +37,7 @@ def test_red_1():
 def test_red_2():
     return response(code_list.Success, red.get('test'))
 
+
+@bp.route('/fp')
+def frontend_pull():
+    pass

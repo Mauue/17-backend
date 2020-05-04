@@ -12,7 +12,11 @@ def _save_session(user_id):
 
 def get_login_user():
     user_id = session.get("user")
-    user = User.get_user_by_id(user_id)
+    try:
+        user_id = int(user_id)
+        user = User.get_user_by_id(user_id)
+    except TypeError:
+        user = None
     if user is None:
         g.user = None
     else:

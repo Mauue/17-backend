@@ -35,14 +35,16 @@ class Project(db.Model):
             {
                 "username": self.originator.username,
                 "id": self.user_id,
-                "identity": "originator"
+                "identity": "originator",
+                "photo": self.originator.photo
             }
         ]
         for m in self.members:
             members.append({
                 "username": m.username,
                 "id": m.id,
-                "identity": "member"
+                "identity": "member",
+                "photo": m.photo
             })
         return members
 
@@ -82,12 +84,20 @@ class Project(db.Model):
                 "name": task.name,
                 "remarks": task.remarks,
                 "finish": task.finish,
-                "originator_id": task.user_id,
+                "originator": {
+                    "id": task.user_id,
+                    "username": task.originator.username,
+                    "photo": task.originator.photo
+                },
                 "t_begin": task.t_begin,
                 "t_end": task.t_end,
                 "priority": task.priority,
                 "label": task.label,
-                "participants_id": [p.id for p in task.participants]
+                "participants": [{
+                    "id": p.id,
+                    "username": p.username,
+                    "photo": p.photo
+                } for p in task.participants]
 
             }
             for task in self.tasks
