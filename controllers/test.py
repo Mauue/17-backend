@@ -41,5 +41,10 @@ def test_red_2():
 
 @bp.route('/fp')
 def frontend_pull():
-    path = os.path.join(settings.base_dir, 'fp.sh')
-    os.system(path)
+    msg = ""
+    try:
+        path = os.path.join(settings.base_dir, 'fp.sh')
+        os.system(path)
+    except Exception as e:
+        msg = e
+    return response(code_list.Success.with_message(msg))
