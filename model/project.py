@@ -111,7 +111,11 @@ class Project(db.Model):
                 "remarks": s.remarks,
                 "t_set": s.t_set,
                 "t_remind": s.t_remind,
-                "creator_id": s.user_id,
+                "creator": {
+                    "id": s.creator.id,
+                    "username": s.creator.username,
+                    "photo": s.creator.photo
+                },
                 "label": s.label
             }
             for s in self.schedules
