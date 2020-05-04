@@ -8,6 +8,7 @@ CSRFError = CodeWithMessage(-101, '认证失败')
 NoLogin = CodeWithMessage(-102, '未登录')
 OperatorError = CodeWithMessage(-103, '错误操作')
 
+
 # 用户模块
 PhoneFormatWrong = CodeWithMessage(1002, '手机号格式错误')
 EmailFormatWrong = CodeWithMessage(1001, '邮箱格式错误')
