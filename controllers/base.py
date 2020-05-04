@@ -12,6 +12,5 @@ def response(c: code.CodeWithMessage, data=None):
         'msg': c.msg,
         'data': data
     })
-    resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
