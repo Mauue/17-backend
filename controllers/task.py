@@ -1,12 +1,11 @@
 from lib.code import code_list
-from model.task_form import TaskCreateForm
+from model.task_form import TaskCreateForm, TaskUpdateForm, TaskDeleteForm
 from .base import *
 from .user import login_required, login_user_required
 from flask import Blueprint, g, request
 from model.project_form import *
 from model.project import Project
 from services import task as service
-
 
 task_bp = Blueprint('task', __name__, url_prefix='/api')
 
@@ -35,3 +34,37 @@ def task_list(project_id):
         return response(e)
 
 
+@task_bp.route('/project/<project_id>/task/update', methods=['POST'])
+@login_user_required
+def task_update(project_id):
+    try:
+        pid = int(project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+
+    form = TaskUpdateForm()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+    e = service.task_update(task_id=form.id.data, user=user, name=form.name.data,
+                            remarks=form.remarks.data, label=form.label.data, priority=form.priority.data,
+                            t_begin=form.t_begin.data, t_end=form.t_end.data, project_id=pid,
+                            finish=form.finish.data)
+    return response(e)
+
+
+@task_bp.route('/project/<project_id>/task/delete', methods=['POST'])
+@login_user_required
+def task_delete(project_id):
+    try:
+        pid = int(project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+    form = TaskDeleteForm()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+    e = service.task_delete(task_id=form.id.data, user=user, project_id=pid)
+    return response(e)

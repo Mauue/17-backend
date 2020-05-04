@@ -90,3 +90,9 @@ def get_user_info():
         "location": user.location,
         "website": user.website
     }
+
+
+def update_user_info(user, username, location, website):
+    user.update_info(name=username, website=website, location=location)
+    return code_list.Success
+

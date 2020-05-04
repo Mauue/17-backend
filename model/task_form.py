@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, DateTimeField
+from wtforms import IntegerField, StringField, DateTimeField, BooleanField
 from wtforms import validators
 
 
@@ -10,4 +10,13 @@ class TaskCreateForm(FlaskForm):
     t_end = DateTimeField('t_begin')
     priority = IntegerField('priority')
     label = StringField('label', validators=[validators.length(max=200)])
+
+
+class TaskUpdateForm(TaskCreateForm):
+    id = IntegerField('id', validators=[validators.DataRequired()])
+    finish = BooleanField('finish')
+
+
+class TaskDeleteForm(FlaskForm):
+    id = IntegerField('id', validators=[validators.DataRequired()])
 

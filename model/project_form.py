@@ -9,4 +9,4 @@ class ProjectCreateForm(FlaskForm):
 
 class ProjectMemberManageForm(FlaskForm):
     account = StringField('account', validators=[validators.DataRequired()])
-    account_type = StringField('account_type')
+    account_type = StringField('account_type', validators=[validators.DataRequired()])

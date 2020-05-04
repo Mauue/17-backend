@@ -79,8 +79,11 @@ class Project(db.Model):
         db.session.commit()
 
     def get_task_list(self):
-        return [
-            {
+        l = []
+        for task in self.tasks:
+            if task.t_delete is not None:
+                continue
+            l.append({
                 "id": task.id,
                 "name": task.name,
                 "remarks": task.remarks,
@@ -99,10 +102,8 @@ class Project(db.Model):
                     "username": p.username,
                     "photo": p.photo
                 } for p in task.participants]
-
-            }
-            for task in self.tasks
-        ]
+            })
+        return l
 
     def get_schedule_list(self):
         return [
@@ -121,3 +122,9 @@ class Project(db.Model):
             }
             for s in self.schedules
         ]
+
+    def has_task(self, task):
+        if task.t_delete is not None:
+            return False
+        return task in self.tasks
+

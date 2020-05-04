@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from . import db
 
 tu = db.Table('task_user',
@@ -43,4 +45,28 @@ class Task(db.Model):
         task = Task(name, project_id, user_id, **kwargs)
         db.session.add(task)
         db.session.commit()
+        return task
+
+    def update(self, name, remarks=None, t_begin=None, t_end=None,
+               priority=None, label=None, finish=False):
+        self.name = name
+        self.remarks = remarks
+        self.t_begin = t_begin
+        self.t_end = t_end
+        self.priority = priority
+        self.label = label
+        self.finish = finish
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        self.t_delete = datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def get_task_by_id(tid):
+        task = Task.query.filter_by(id=tid).first()
+        if task and task.t_delete is not None:
+            return None
         return task

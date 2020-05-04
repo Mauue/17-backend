@@ -58,3 +58,9 @@ class User(db.Model):
         return [{"id": p.id, "name": p.name, "identity": "member"} for p in ps] + \
                 [{"id": p.id, "name": p.name, "identity": "originator"} for p in pc]
 
+    def update_info(self, name, website, location):
+        self.username = name
+        self.website = website
+        self.location = location
+        db.session.add(self)
+        db.session.commit()

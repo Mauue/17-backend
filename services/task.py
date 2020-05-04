@@ -29,3 +29,40 @@ def task_create(project_id, user, name, remarks, t_begin, t_end, priority, label
     Task.new_task(name, p.id, user.id, remarks=remarks, t_begin=t_begin, t_end=t_end,
                   priority=priority, label=label)
     return code_list.Success
+
+
+def task_update(task_id, user, project_id, name, remarks, t_begin, t_end, priority, label, finish):
+    task = Task.get_task_by_id(task_id)
+    if task is None:
+        return code_list.TaskNoExists
+
+    project = Project.get_project_by_id(project_id)
+    if project is None:
+        return code_list.ProjectNoExists
+    if not project.is_project_member(user):
+        return code_list.NotPermission
+
+    if not project.has_task(task):
+        return code_list.TaskNoExists
+
+    task.update(name=name, remarks=remarks, t_begin=t_begin,
+                t_end=t_end, priority=priority, label=label, finish=finish)
+    return code_list.Success
+
+
+def task_delete(task_id, user, project_id):
+    task = Task.get_task_by_id(task_id)
+    if task is None:
+        return code_list.TaskNoExists
+
+    project = Project.get_project_by_id(project_id)
+    if project is None:
+        return code_list.ProjectNoExists
+    if not project.is_project_member(user):
+        return code_list.NotPermission
+
+    if not project.has_task(task):
+        return code_list.TaskNoExists
+
+    task.delete()
+    return code_list.Success

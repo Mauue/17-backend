@@ -80,10 +80,17 @@ def logout_user():
     return response(code_list.Success)
 
 
-@user_bp.route('/user/info')
+@user_bp.route('/user/info', methods=["POST", "GET"])
 @login_user_required
 def info_user():
-    data = service.get_user_info()
-    return response(code_list.Success, data)
-
-
+    if request.method == "GET":
+        data = service.get_user_info()
+        return response(code_list.Success, data)
+    else:
+        form = UserUpdateInfoForm()
+        if not form.validate():
+            return response(code_list.ParamsWrong.with_message(form.errors))
+        user = g.user
+        e = service.update_user_info(user, username=form.username.data, website=form.website.data,
+                                     location=form.location.data)
+        return response(e)
