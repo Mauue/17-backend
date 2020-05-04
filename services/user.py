@@ -96,3 +96,10 @@ def update_user_info(user, username, location, website):
     user.update_info(name=username, website=website, location=location)
     return code_list.Success
 
+
+def upload_photo(user, file, filename):
+    extension = filename.split('.')[-1]
+    if user.upload_photo(file=file, file_extension=extension):
+        return code_list.Success
+    return code_list.OtherError
+

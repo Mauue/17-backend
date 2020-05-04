@@ -7,6 +7,7 @@ ParamsWrong = CodeWithMessage(-100, '参数错误')
 CSRFError = CodeWithMessage(-101, '认证失败')
 NoLogin = CodeWithMessage(-102, '未登录')
 OperatorError = CodeWithMessage(-103, '错误操作')
+FileSizeTooBig = CodeWithMessage(-104, '文件过大')
 
 
 # 用户模块

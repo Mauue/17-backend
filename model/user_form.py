@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField
 from wtforms import validators
 
@@ -22,4 +23,8 @@ class UserUpdateInfoForm(FlaskForm):
                                                    validators.Length(min=2, max=12)])
     location = StringField('location', validators=[validators.Length(max=200)])
     website = StringField('website', validators=[validators.Length(max=200)])
+
+
+class UserUploadPhotoForm(FlaskForm):
+    image = FileField('image', validators=[FileAllowed(['jpg', 'png'], "image only"), FileRequired()])
 

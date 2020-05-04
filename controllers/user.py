@@ -94,3 +94,19 @@ def info_user():
         e = service.update_user_info(user, username=form.username.data, website=form.website.data,
                                      location=form.location.data)
         return response(e)
+
+
+@user_bp.route('/user/info/photo', methods=["POST"])
+@login_user_required
+def user_photo():
+    form = UserUploadPhotoForm()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+    file = form.image.data.stream.read()
+    file_length = len(file)
+    if file_length > 5 * 1000 * 1000:
+        return response(code_list.FileSizeTooBig)
+
+    user = g.user
+    e = service.upload_photo(user, file, form.image.data.filename)
+    return response(e)

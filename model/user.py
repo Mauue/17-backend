@@ -1,4 +1,5 @@
 from . import db, red
+from .oss import oss
 import random
 
 
@@ -64,3 +65,12 @@ class User(db.Model):
         self.location = location
         db.session.add(self)
         db.session.commit()
+
+    def upload_photo(self, file, file_extension):
+        success, path = oss.upload_photo(file=file, file_extension=file_extension, old_file=self.photo)
+        if success:
+            self.photo = path
+            db.session.add(self)
+            db.session.commit()
+            return True
+        return False
