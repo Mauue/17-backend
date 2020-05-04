@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from .base import response
 from lib.code import code_list
 from db import red, db
-from model.action import Action
+import os
+import settings
 
 bp = Blueprint('api', __name__, url_prefix='/api/test')
 
@@ -40,4 +41,5 @@ def test_red_2():
 
 @bp.route('/fp')
 def frontend_pull():
-    pass
+    path = os.path.join(settings.base_dir, 'fp.sh')
+    os.system(path)
