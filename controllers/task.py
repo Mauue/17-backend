@@ -15,7 +15,7 @@ task_bp = Blueprint('task', __name__, url_prefix='/api')
 def task_list(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     user = g.user
@@ -39,7 +39,7 @@ def task_list(project_id):
 def task_update(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     form = TaskUpdateForm()
@@ -59,7 +59,7 @@ def task_update(project_id):
 def task_delete(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
     form = TaskDeleteForm()
     if not form.validate():
@@ -75,7 +75,7 @@ def task_delete(project_id):
 def task_add_participant(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
     form = TaskManageParticipant()
     if not form.validate():
@@ -93,7 +93,7 @@ def task_add_participant(project_id):
 def task_remove_participant(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
     form = TaskManageParticipant()
     if not form.validate():
