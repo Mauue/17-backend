@@ -38,6 +38,10 @@ InParticipant = CodeWithMessage(3002, '成员已经参与任务')
 NotInParticipant = CodeWithMessage(3003, '成员未参与任务')
 
 
+# 文件模块
+FileNoExists = CodeWithMessage(4001, '文件不存在')
+
+
 # 其他模块
 LabelTooLong = CodeWithMessage(9001, '标签过长')
 

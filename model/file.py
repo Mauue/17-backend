@@ -26,3 +26,25 @@ class File:
         print(path)
         return oss.upload_file(path=path, file=file, tag=tag)
 
+    @staticmethod
+    def download_file(project_id, path):
+        path = str(project_id) + '/' + path.strip('/')
+        if not oss.exist_file(path):
+            return None
+        return oss.download_file(path)
+
+    @staticmethod
+    def delete_file(project_id, path):
+        path = str(project_id) + '/' + path.strip('/')
+        if not oss.exist_file(path):
+            return None
+        return oss.delete_file(path)
+
+    @staticmethod
+    def delete_files(project_id, paths):
+        new_paths = []
+        for path in paths:
+            path = str(project_id) + '/' + path.strip('/')
+            new_paths.append(path)
+        return True
+

@@ -69,6 +69,18 @@ class _OSS(object):
         success = result.status == HTTPStatus.OK
         return success
 
+    def exist_file(self, path):
+        return self.private_bucket.object_exists(path)
+
+    def download_file(self, path):
+        return self.private_bucket.sign_url('GET', path, 60)
+
+    def delete_file(self, path):
+        return self.private_bucket.delete_object(path)
+
+    def delete_files(self, paths):
+        return self.private_bucket.batch_delete_objects(paths)
+
 
 oss = _OSS()
 

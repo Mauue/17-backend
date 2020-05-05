@@ -8,3 +8,11 @@ class FileUploadForm(FlaskForm):
     file = FileField('file')
     path = StringField('path')
 
+
+class FileDeleteForm(FlaskForm):
+    path = StringField('path', validators=[validators.DataRequired()])
+
+
+class FilesDeleteForm(FlaskForm):
+    paths = StringField('paths', validators=[validators.DataRequired()])
+
