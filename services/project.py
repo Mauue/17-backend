@@ -69,3 +69,4 @@ def project_delete(project_id, user):
         return code_list.NotProjectOriginator
     p.delete()
     return code_list.Success
+

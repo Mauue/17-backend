@@ -1,5 +1,6 @@
 import threading
 import oss2
+from oss2.headers import OSS_OBJECT_TAGGING
 import settings
 import uuid
 from http import HTTPStatus
@@ -37,6 +38,7 @@ class _OSS(object):
         return success, settings.PublicBucketHost + settings.PublicBucketPhotoPath + filename
 
     def get_file_list(self, prefix):
+        print(prefix)
         file_dict = {
             "directory": [],
             "file": []
@@ -44,6 +46,7 @@ class _OSS(object):
         for f in oss2.ObjectIterator(bucket=self.private_bucket, prefix=prefix, delimiter='/'):
             if f.key == prefix:
                 continue
+            tag = self.private_bucket.get_object_tagging(f.key)
             if f.is_prefix():
                 file_dict["directory"].append({
                     "name": str(f.key).lstrip(prefix)
@@ -51,9 +54,20 @@ class _OSS(object):
             else:
                 file_dict["file"].append({
                     "filename": str(f.key).lstrip(prefix),
+                    "upload": tag.tag_set.tagging_rule["upload"],
                     "size": f.size
                 })
         return file_dict
+
+    def upload_file(self, file, path, tag):
+        headers = dict()
+        headers[OSS_OBJECT_TAGGING] = tag
+        if file is None:
+            file = ""
+            path = path.rstrip('/') + '/'
+        result = self.private_bucket.put_object(path, file, headers=headers)
+        success = result.status == HTTPStatus.OK
+        return success
 
 
 oss = _OSS()
