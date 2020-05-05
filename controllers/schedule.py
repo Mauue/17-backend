@@ -1,5 +1,5 @@
 from lib.code import code_list
-from model.schedule_form import ScheduleCreateForm
+from model.schedule_form import *
 from .base import *
 from .user import login_required, login_user_required
 from flask import Blueprint, g, request
@@ -16,7 +16,7 @@ schedule_bp = Blueprint('schedule', __name__, url_prefix='/api')
 def schedule_list(project_id):
     try:
         pid = int(project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     user = g.user
@@ -34,3 +34,40 @@ def schedule_list(project_id):
                                     label=form.label.data)
         return response(e)
 
+
+@schedule_bp.route('/project/<project_id>/schedule/update', methods=['POST'])
+@login_user_required
+def schedule_update(project_id):
+    try:
+        pid = int(project_id)
+    except ValueError:
+        return response(code_list.ProjectNoExists)
+
+    form = ScheduleUpdateForm()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+
+    e = service.schedule_update(sid=form.id.data, pid=pid, user=user, content=form.content.data,
+                                remarks=form.remarks.data, label=form.label.data,
+                                t_set=form.t_set.data)
+    return response(e)
+
+
+@schedule_bp.route('/project/<project_id>/schedule/delete', methods=['POST'])
+@login_user_required
+def schedule_delete(project_id):
+    try:
+        pid = int(project_id)
+    except ValueError:
+        return response(code_list.ProjectNoExists)
+
+    form = ScheduleDeleteForm()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+
+    e = service.schedule_delete(sid=form.id.data, pid=pid, user=user)
+    return response(e)

@@ -42,6 +42,10 @@ NotInParticipant = CodeWithMessage(3003, '成员未参与任务')
 FileNoExists = CodeWithMessage(4001, '文件不存在')
 
 
+# 日程模块
+ScheduleNoExists = CodeWithMessage(5001, '日程不存在')
+
+
 # 其他模块
 LabelTooLong = CodeWithMessage(9001, '标签过长')
 

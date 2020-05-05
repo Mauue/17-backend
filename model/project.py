@@ -114,8 +114,11 @@ class Project(db.Model):
         return l
 
     def get_schedule_list(self):
-        return [
-            {
+        l = []
+        for s in self.schedules:
+            if s.t_delete is not None:
+                continue
+            l.append({
                 "id": s.id,
                 "content": s.content,
                 "remarks": s.remarks,
@@ -127,12 +130,16 @@ class Project(db.Model):
                     "photo": s.creator.photo
                 },
                 "label": s.label
-            }
-            for s in self.schedules
-        ]
+            })
+        return l
 
     def has_task(self, task):
         if task.t_delete is not None:
             return False
         return task in self.tasks
+
+    def has_schedule(self, schedule):
+        if schedule.t_delete is not None:
+            return False
+        return schedule in self.schedules
 

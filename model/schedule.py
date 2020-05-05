@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from . import db
 
 
@@ -27,7 +29,28 @@ class Schedule(db.Model):
         self.label = label
         self.remarks = remarks
 
-    def new(self):
+    @staticmethod
+    def new(content, project_id, user_id, remarks, t_set, t_remind, label):
+        s = Schedule(content, project_id, user_id, remarks, t_set, t_remind, label)
+        db.session.add(s)
+        db.session.commit()
+
+    def update(self, content, remarks, t_set, label):
+        self.content = content
+        self.t_set = t_set
+        self.label = label
+        self.remarks = remarks
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        self.t_delete = datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def get_by_id(id):
+        s = Schedule.query.filter_by(id=id).first()
+        if s and s.t_delete is not None:
+            return None
+        return s
