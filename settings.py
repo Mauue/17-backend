@@ -13,7 +13,7 @@ PublicBucketName = ""
 PublicBucketRegion = ""
 PublicBucketHost = ""
 
-PublicBucketPhotoPath = "img/photo"
+PublicBucketPhotoPath = "img/photo/"
 
 PrivateBucketName = ""
 PrivateBucketRegion = ""
