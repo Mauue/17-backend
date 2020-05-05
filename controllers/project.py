@@ -16,8 +16,8 @@ def new_project_controller():
     if not form.validate_on_submit():
         return response(code_list.ParamsWrong)
     id = int(g.user.id)
-    pid = service.new_project(form.name.data, id)
-    return response(code_list.Success, {"id": pid})
+    e, d = service.new_project(form.name.data, id)
+    return response(e, d)
 
 
 @project_bp.route('/project/<_project_id>')

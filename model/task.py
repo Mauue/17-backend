@@ -41,8 +41,10 @@ class Task(db.Model):
         self.label = label
 
     @staticmethod
-    def new(name, project_id, user_id, **kwargs):
-        task = Task(name, project_id, user_id, **kwargs)
+    def new(name, project_id, user_id, remarks=None, t_begin=None, t_end=None,
+            priority=None, label=None):
+        task = Task(name, project_id, user_id, remarks=None, t_begin=None, t_end=None,
+                    priority=None, label=None)
         db.session.add(task)
         db.session.commit()
         return task
@@ -84,4 +86,3 @@ class Task(db.Model):
 
     def has_participant(self, user):
         return user in self.participants
-

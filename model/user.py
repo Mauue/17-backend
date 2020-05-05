@@ -49,9 +49,12 @@ class User(db.Model):
     def get_user_by_phone(phone):
         return User.query.filter_by(tel=phone).first()
 
-    def create_new_account(self):
-        db.session.add(self)
+    @staticmethod
+    def new(username, password, email=None, tel=None):
+        u = User(username=username, password=password, email=email, tel=tel)
+        db.session.add(u)
         db.session.commit()
+        return u
 
     def project_list(self):
         ps = self.projects.all()
@@ -67,7 +70,7 @@ class User(db.Model):
             l.append({"id": p.id, "name": p.name, "identity": "originator"})
         return l
 
-    def update_info(self, name, website, location):
+    def update(self, name, website, location):
         self.username = name
         self.website = website
         self.location = location

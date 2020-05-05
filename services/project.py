@@ -13,9 +13,10 @@ def before_project_service(pid, user) -> (code_list.CodeWithMessage, Project):
 
 
 def new_project(name, user_id):
-    p = Project(name, user_id)
-    id = p.create_new_project()
-    return id
+    p = Project.new(name, user_id)
+    return code_list.Success, {
+        "id": p.id
+    }
 
 
 def project_info(project_id, user):

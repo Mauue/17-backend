@@ -25,10 +25,12 @@ class Project(db.Model):
         self.name = name
         self.user_id = user_id
 
-    def create_new_project(self):
-        db.session.add(self)
+    @staticmethod
+    def new(name, user_id):
+        p = Project(name, user_id)
+        db.session.add(p)
         db.session.commit()
-        return self.id
+        return p
 
     def delete(self):
         self.t_delete = datetime.now()

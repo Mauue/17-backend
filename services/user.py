@@ -28,12 +28,11 @@ def register_by_email(email, password, username):
     if result is None:
         return code_list.EmailFormatWrong
 
-    user = User.query.filter_by(email=email).first()
+    user = User.get_user_by_email(email)
     if user:
         return code_list.EmailExists
 
-    user = User(email=email, password=generate_password_hash(password), username=username)
-    user.create_new_account()
+    user = User.new(email=email, password=generate_password_hash(password), username=username)
     return code_list.Success
 
 
@@ -42,12 +41,11 @@ def register_by_phone(phone, password, username):
     if result is None:
         return code_list.PhoneFormatWrong
 
-    user = User.query.filter_by(tel=phone).first()
+    user = User.get_user_by_phone(phone)
     if user:
         return code_list.PhoneExists
 
-    user = User(tel=phone, password=generate_password_hash(password), username=username)
-    user.create_new_account()
+    user = User.new(tel=phone, password=generate_password_hash(password), username=username)
     return code_list.Success
 
 
@@ -93,7 +91,7 @@ def get_user_info():
 
 
 def update_user_info(user, username, location, website):
-    user.update_info(name=username, website=website, location=location)
+    user.update(name=username, website=website, location=location)
     return code_list.Success
 
 
