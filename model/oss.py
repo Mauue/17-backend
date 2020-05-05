@@ -79,6 +79,7 @@ class _OSS(object):
         return self.private_bucket.delete_object(path)
 
     def delete_files(self, paths):
+        print(paths)
         return self.private_bucket.batch_delete_objects(paths)
 
 

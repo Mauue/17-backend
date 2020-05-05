@@ -46,5 +46,6 @@ class File:
         for path in paths:
             path = str(project_id) + '/' + path.strip('/')
             new_paths.append(path)
+        r = oss.delete_files(new_paths)
         return True
 
