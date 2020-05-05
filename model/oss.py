@@ -34,7 +34,7 @@ class _OSS(object):
         success = result.status == HTTPStatus.OK
         if success and old_file:
             self.public_bucket.delete_object(old_file.split('.com/')[-1])
-        return success, settings.PublicBucketHostOut + settings.PublicBucketPhotoPath + filename
+        return success, settings.PublicBucketHost + settings.PublicBucketPhotoPath + filename
 
     # def g
 
