@@ -32,6 +32,18 @@ def project_info(_project_id):
     return response(c, d)
 
 
+@project_bp.route('/project/<_project_id>/delete', methods=['POST'])
+@login_user_required
+def project_delete(_project_id):
+    try:
+        pid = int(_project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+    user = g.user
+    c = service.project_delete(pid, user)
+    return response(c)
+
+
 @project_bp.route('/project/<_project_id>/user/add', methods=['POST'])
 @login_user_required
 def project_add_user(_project_id):
@@ -59,12 +71,13 @@ def project_remove_user(_project_id):
         return response(code_list.ProjectNoExists)
 
     form = ProjectMemberManageForm()
-    if not form.validate_on_submit():
-        return response(code_list.ParamsWrong)
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
 
     user = g.user
 
-    c = service.project_member_manage(pid, form.id.data, user, is_add=False)
+    c = service.project_member_manage(project_id=pid, account=form.account.data,
+                                      admin=user, account_type=form.account_type.data, is_add=False)
     return response(c)
 
 

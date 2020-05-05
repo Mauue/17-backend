@@ -56,8 +56,16 @@ class User(db.Model):
     def project_list(self):
         ps = self.projects.all()
         pc = self.project_create
-        return [{"id": p.id, "name": p.name, "identity": "member"} for p in ps] + \
-                [{"id": p.id, "name": p.name, "identity": "originator"} for p in pc]
+        l = []
+        for p in ps:
+            if p.t_delete is not None:
+                continue
+            l.append({"id": p.id, "name": p.name, "identity": "member"})
+        for p in pc:
+            if p.t_delete is not None:
+                continue
+            l.append({"id": p.id, "name": p.name, "identity": "originator"})
+        return l
 
     def update_info(self, name, website, location):
         self.username = name

@@ -59,3 +59,13 @@ def project_member_manage(project_id, account, admin, is_add=True, account_type=
             return code_list.NotInProject
         p.remove_member(user)
     return code_list.Success
+
+
+def project_delete(project_id, user):
+    c, p = before_project_service(project_id, user)
+    if c is not None:
+        return c
+    if p.user_id != user.id:
+        return code_list.NotProjectOriginator
+    p.delete()
+    return code_list.Success

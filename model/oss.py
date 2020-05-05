@@ -36,7 +36,24 @@ class _OSS(object):
             self.public_bucket.delete_object(old_file.split('.com/')[-1])
         return success, settings.PublicBucketHost + settings.PublicBucketPhotoPath + filename
 
-    # def g
+    def get_file_list(self, prefix):
+        file_dict = {
+            "directory": [],
+            "file": []
+        }
+        for f in oss2.ObjectIterator(bucket=self.private_bucket, prefix=prefix, delimiter='/'):
+            if f.key == prefix:
+                continue
+            if f.is_prefix():
+                file_dict["directory"].append({
+                    "name": str(f.key).lstrip(prefix)
+                })
+            else:
+                file_dict["file"].append({
+                    "filename": str(f.key).lstrip(prefix),
+                    "size": f.size
+                })
+        return file_dict
 
 
 oss = _OSS()

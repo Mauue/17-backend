@@ -1,11 +1,10 @@
+from datetime import datetime
+
 from . import db
 
 pu = db.Table('project_user',
-              db.Column('project_id', db.Integer, db.ForeignKey('project.id')),
-              db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-              db.Column('identity', db.SmallInteger, nullable=False, default=0),
-              db.Column('t_attend', db.TIMESTAMP, server_default=db.func.now()),
-              db.Column('t_delete', db.TIMESTAMP, default=None)
+              db.Column('project_id', db.Integer, db.ForeignKey('project.id'), primary_key=True),
+              db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
               )
 
 
@@ -30,6 +29,11 @@ class Project(db.Model):
         db.session.add(self)
         db.session.commit()
         return self.id
+
+    def delete(self):
+        self.t_delete = datetime.now()
+        db.session.add(self)
+        db.session.commit()
 
     def get_project_member_list(self):
         members = [
@@ -67,7 +71,10 @@ class Project(db.Model):
     @staticmethod
     def get_project_by_id(project_id):
         project_id = int(project_id)
-        return Project.query.filter_by(id=project_id).first()
+        p = Project.query.filter_by(id=project_id).first()
+        if p and p.t_delete is not None:
+            return None
+        return p
 
     def add_member(self, user):
         self.members.append(user)
