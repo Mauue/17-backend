@@ -10,10 +10,13 @@ class _OSS(object):
 
     def __init__(self):
         self.auth = oss2.Auth(settings.AccessKeyId, settings.AccessKeySecret)
-        self.bucket = oss2.Bucket(self.auth, settings.BucketRegion, settings.BucketName)
+        self.public_bucket = oss2.Bucket(self.auth, settings.PublicBucketRegion,
+                                         settings.PublicBucketName)
+        self.private_bucket = oss2.Bucket(self.auth, settings.PrivateBucketRegion,
+                                          settings.PrivateBucketName)
 
         try:
-            self.bucket.get_bucket_info()
+            self.public_bucket.get_bucket_info()
         except oss2.exceptions.NoSuchBucket:
             raise Exception("error")
 
@@ -25,13 +28,15 @@ class _OSS(object):
 
         return _OSS._instance
 
-    def upload_photo(self, file, file_extension, old_file):
+    def upload_photo(self, file, file_extension, old_file) -> (bool, str):
         filename = ''.join(str(uuid.uuid4()).split('-')) + '.' + file_extension
-        result = self.bucket.put_object(settings.BucketPhotoPath+filename, file)
+        result = self.public_bucket.put_object(settings.PublicBucketPhotoPath + filename, file)
         success = result.status == HTTPStatus.OK
         if success and old_file:
-            self.bucket.delete_object(old_file.split('.com/')[-1])
-        return success, settings.BucketHost + settings.BucketPhotoPath + filename
+            self.public_bucket.delete_object(old_file.split('.com/')[-1])
+        return success, settings.PublicBucketHostOut + settings.PublicBucketPhotoPath + filename
+
+    # def g
 
 
 oss = _OSS()

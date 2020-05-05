@@ -9,11 +9,15 @@ base_dir = os.path.abspath(os.curdir)
 
 AccessKeyId = ""
 AccessKeySecret = ""
-BucketName = ""
-BucketRegion = ""
-BucketHost = ""
+PublicBucketName = ""
+PublicBucketRegion = ""
+PublicBucketHost = ""
 
-BucketPhotoPath = "img/photo"
+PublicBucketPhotoPath = "img/photo"
+
+PrivateBucketName = ""
+PrivateBucketRegion = ""
+PrivateBucketHost = ""
 
 try:
     from local import *
