@@ -27,11 +27,11 @@ class _OSS(object):
 
     def upload_photo(self, file, file_extension, old_file):
         filename = ''.join(str(uuid.uuid4()).split('-')) + '.' + file_extension
-        result = self.bucket.put_object('img/photo/'+filename, file)
+        result = self.bucket.put_object(settings.BucketPhotoPath+filename, file)
         success = result.status == HTTPStatus.OK
         if success and old_file:
             self.bucket.delete_object(old_file.split('.com/')[-1])
-        return success, settings.BucketHost + "/img/photo/" + filename
+        return success, settings.BucketHost + settings.BucketPhotoPath + filename
 
 
 oss = _OSS()

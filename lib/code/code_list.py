@@ -34,6 +34,8 @@ NotInProject = CodeWithMessage(2006, '成员未加入项目')
 
 # 任务模块
 TaskNoExists = CodeWithMessage(3001, '任务不存在')
+InParticipant = CodeWithMessage(3002, '成员已经参与任务')
+NotInParticipant = CodeWithMessage(3003, '成员未参与任务')
 
 
 # 其他模块

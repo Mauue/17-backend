@@ -13,7 +13,10 @@ BucketName = ""
 BucketRegion = ""
 BucketHost = ""
 
+BucketPhotoPath = "img/photo"
+
 try:
     from local import *
 except ModuleNotFoundError:
     pass
+

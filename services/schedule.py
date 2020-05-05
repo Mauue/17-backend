@@ -9,7 +9,7 @@ def schedule_list(pid, user):
     if project is None:
         return code_list.ProjectNoExists, None
 
-    if not project.is_project_member(user):
+    if not project.has_member(user):
         return code_list.NotPermission, None
 
     return code_list.Success, project.get_schedule_list()
@@ -19,7 +19,7 @@ def schedule_create(project_id, user, content, remarks, t_set, t_remind, label):
     p = Project.get_project_by_id(project_id)
     if p is None:
         return code_list.ProjectNoExists
-    if not p.is_project_member(user):
+    if not p.has_member(user):
         return code_list.NotPermission
 
     if len(label) > 5:

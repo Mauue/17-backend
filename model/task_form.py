@@ -20,3 +20,8 @@ class TaskUpdateForm(TaskCreateForm):
 class TaskDeleteForm(FlaskForm):
     id = IntegerField('id', validators=[validators.DataRequired()])
 
+
+class TaskManageParticipant(FlaskForm):
+    task_id = IntegerField('task_id', validators=[validators.DataRequired()])
+    user_id = IntegerField('user_id', validators=[validators.DataRequired()])
+

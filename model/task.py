@@ -41,7 +41,7 @@ class Task(db.Model):
         self.label = label
 
     @staticmethod
-    def new_task(name, project_id, user_id, **kwargs):
+    def new(name, project_id, user_id, **kwargs):
         task = Task(name, project_id, user_id, **kwargs)
         db.session.add(task)
         db.session.commit()
@@ -70,3 +70,18 @@ class Task(db.Model):
         if task and task.t_delete is not None:
             return None
         return task
+
+    def add_participant(self, user):
+        print(self.participants)
+        self.participants.append(user)
+        db.session.add(self)
+        db.session.commit()
+
+    def remove_participant(self, user):
+        self.participants.remove(user)
+        db.session.add(self)
+        db.session.commit()
+
+    def has_participant(self, user):
+        return user in self.participants
+

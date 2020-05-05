@@ -1,5 +1,5 @@
 from lib.code import code_list
-from model.task_form import TaskCreateForm, TaskUpdateForm, TaskDeleteForm
+from model.task_form import *
 from .base import *
 from .user import login_required, login_user_required
 from flask import Blueprint, g, request
@@ -68,3 +68,40 @@ def task_delete(project_id):
     user = g.user
     e = service.task_delete(task_id=form.id.data, user=user, project_id=pid)
     return response(e)
+
+
+@task_bp.route('/project/<project_id>/task/participant/add', methods=['POST'])
+@login_user_required
+def task_add_participant(project_id):
+    try:
+        pid = int(project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+    form = TaskManageParticipant()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+
+    e = service.task_manage_participant(task_id=form.task_id.data, project_id=pid,
+                                        participant_id=form.user_id.data, user=user, is_add=True)
+    return response(e)
+
+
+@task_bp.route('/project/<project_id>/task/participant/remove', methods=['POST'])
+@login_user_required
+def task_remove_participant(project_id):
+    try:
+        pid = int(project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+    form = TaskManageParticipant()
+    if not form.validate():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+
+    e = service.task_manage_participant(task_id=form.task_id.data, project_id=pid,
+                                        participant_id=form.user_id.data, user=user, is_add=False)
+    return response(e)
+

@@ -73,3 +73,4 @@ def project_remove_user(_project_id):
 def project_list():
     user = g.user
     return response(code_list.Success, user.project_list())
+

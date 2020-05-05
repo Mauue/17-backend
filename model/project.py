@@ -49,12 +49,13 @@ class Project(db.Model):
             })
         return members
 
-    def is_project_member(self, user, is_admin=False):
+    def has_member(self, user, is_admin=False):
         if self.user_id == user.id:
             return True
         # TODO 管理员查询出了点问题
         if is_admin:
             return False
+
         for m in self.members:
             if m.id == user.id:
                 return True
