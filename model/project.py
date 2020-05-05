@@ -2,10 +2,14 @@ from datetime import datetime
 
 from . import db
 
-pu = db.Table('project_user',
-              db.Column('project_id', db.Integer, db.ForeignKey('project.id'), primary_key=True),
-              db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-              )
+
+class ProjectUser(db.Model):
+    project_id = db.Column('project_id', db.Integer, db.ForeignKey('project.id'), primary_key=True)
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    is_admin = db.Column('is_admin', db.Boolean, default=False)
+
+    project = db.relationship('Project', back_populates='members')
+    member = db.relationship('User', back_populates='projects')
 
 
 class Project(db.Model):
@@ -18,8 +22,7 @@ class Project(db.Model):
     t_delete = db.Column(db.TIMESTAMP, default=None)
 
     originator = db.relationship("User", backref="project_create")
-    members = db.relationship('User', secondary=pu,
-                              backref=db.backref('projects', lazy='dynamic'))
+    members = db.relationship('ProjectUser', back_populates='project')
 
     def __init__(self, name, user_id):
         self.name = name
@@ -48,22 +51,19 @@ class Project(db.Model):
         ]
         for m in self.members:
             members.append({
-                "username": m.username,
-                "id": m.id,
-                "identity": "member",
-                "photo": m.photo
+                "username": m.member.username,
+                "id": m.member.id,
+                "identity": "admin" if m.is_admin else "member",
+                "photo": m.member.photo
             })
         return members
 
     def has_member(self, user, is_admin=False):
         if self.user_id == user.id:
             return True
-        # TODO 管理员查询出了点问题
-        if is_admin:
-            return False
 
         for m in self.members:
-            if m.id == user.id:
+            if m.member.id == user.id and (not is_admin or m.is_admin):
                 return True
         return False
 
@@ -79,14 +79,17 @@ class Project(db.Model):
         return p
 
     def add_member(self, user):
-        self.members.append(user)
+        pu = ProjectUser()
+        pu.member = user
+        self.members.append(pu)
         db.session.add(self)
         db.session.commit()
 
     def remove_member(self, user):
-        self.members.remove(user)
-        db.session.add(self)
-        db.session.commit()
+        for m in self.members:
+            if m.member == user:
+                db.session.delete(m)
+                db.session.commit()
 
     def get_task_list(self):
         l = []
@@ -145,3 +148,16 @@ class Project(db.Model):
             return False
         return schedule in self.schedules
 
+    def add_admin(self, user):
+        for m in self.members:
+            if m.member == user:
+                m.is_admin = True
+                db.session.add(m)
+                db.session.commit()
+
+    def remove_admin(self, user):
+        for m in self.members:
+            if m.member == user:
+                m.is_admin = False
+                db.session.add(m)
+                db.session.commit()

@@ -3,12 +3,14 @@ from model.project import Project
 from model.user import User
 
 
-def before_project_service(pid, user) -> (code_list.CodeWithMessage, Project):
+def before_project_service(pid, user, is_admin=False) -> (code_list.CodeWithMessage, Project):
     p = Project.get_project_by_id(pid)
     if p is None:
         return code_list.ProjectNoExists, None
     if not p.has_member(user):
         return code_list.NotPermission, None
+    if is_admin and not p.has_member(user, is_admin=is_admin):
+        return code_list.NotProjectAdmin, None
     return None, p
 
 
@@ -69,5 +71,28 @@ def project_delete(project_id, user):
     if p.user_id != user.id:
         return code_list.NotProjectOriginator
     p.delete()
+    return code_list.Success
+
+
+def project_manage_admin(project_id, user_id, admin, is_add=True):
+    c, p = before_project_service(project_id, admin)
+    if c is not None:
+        return c
+    if p.user_id != admin.id:
+        return code_list.NotProjectOriginator
+
+    user = User.get_user_by_id(user_id)
+    if user is None:
+        return code_list.UserNotExist
+
+    if user.id == admin.id:
+        return code_list.OperatorError
+    if not p.has_member(user):
+        return code_list.NotInProject
+
+    if is_add:
+        p.add_admin(user)
+    else:
+        p.remove_admin(user)
     return code_list.Success
 

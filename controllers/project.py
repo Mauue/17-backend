@@ -87,3 +87,37 @@ def project_list():
     user = g.user
     return response(code_list.Success, user.project_list())
 
+
+@project_bp.route('/project/<_project_id>/admin/add', methods=['POST'])
+@login_user_required
+def project_add_admin(_project_id):
+    try:
+        pid = int(_project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+
+    form = ProjectAdminManageForm()
+    if not form.validate_on_submit():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+    c = service.project_manage_admin(project_id=pid, user_id=form.id.data, admin=user)
+    return response(c)
+
+
+@project_bp.route('/project/<_project_id>/admin/remove', methods=['POST'])
+@login_user_required
+def project_remove_admin(_project_id):
+    try:
+        pid = int(_project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+
+    form = ProjectAdminManageForm()
+    if not form.validate_on_submit():
+        return response(code_list.ParamsWrong.with_message(form.errors))
+
+    user = g.user
+    c = service.project_manage_admin(project_id=pid, user_id=form.id.data, admin=user, is_add=False)
+    return response(c)
+

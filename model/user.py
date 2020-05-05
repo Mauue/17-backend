@@ -18,6 +18,8 @@ class User(db.Model):
     t_update = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now(),)
     t_delete = db.Column(db.TIMESTAMP, default=None)
 
+    projects = db.relationship("ProjectUser", back_populates='member')
+
     def __init__(self, username, password, email=None, tel=None):
         self.username = username
         self.email = email
@@ -57,13 +59,13 @@ class User(db.Model):
         return u
 
     def project_list(self):
-        ps = self.projects.all()
+        ps = self.projects
         pc = self.project_create
         l = []
         for p in ps:
-            if p.t_delete is not None:
+            if p.project.t_delete is not None:
                 continue
-            l.append({"id": p.id, "name": p.name, "identity": "member"})
+            l.append({"id": p.project.id, "name": p.project.name, "identity": "admin" if p.is_admin else "member"})
         for p in pc:
             if p.t_delete is not None:
                 continue
