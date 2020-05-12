@@ -1,6 +1,8 @@
 from lib.code import code_list
 from model.project import Project
 from model.user import User
+from model.action import Action
+from model import action_type
 
 
 def before_project_service(pid, user, is_admin=False) -> (code_list.CodeWithMessage, Project):
@@ -14,8 +16,12 @@ def before_project_service(pid, user, is_admin=False) -> (code_list.CodeWithMess
     return None, p
 
 
-def new_project(name, user_id):
-    p = Project.new(name, user_id)
+def new_project(name, user):
+    p = Project.new(name, user.id)
+
+    Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_create.name,
+               content=name, link=p.link)
+
     return code_list.Success, {
         "id": p.id
     }
@@ -57,10 +63,15 @@ def project_member_manage(project_id, account, admin, is_add=True, account_type=
             return code_list.InProject
 
         p.add_member(user)
+        Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_join.name,
+                   content=p.name, link=p.link)
     else:
         if not p.has_member(user):
             return code_list.NotInProject
         p.remove_member(user)
+
+        Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_leave.name,
+                   content=p.name, link=p.link)
     return code_list.Success
 
 
@@ -71,6 +82,8 @@ def project_delete(project_id, user):
     if p.user_id != user.id:
         return code_list.NotProjectOriginator
     p.delete()
+    Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_delete.name,
+               content=p.name, link=p.link)
     return code_list.Success
 
 
@@ -92,7 +105,11 @@ def project_manage_admin(project_id, user_id, admin, is_add=True):
 
     if is_add:
         p.add_admin(user)
+        Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_add_admin.name,
+                   content=p.name, link=p.link)
     else:
         p.remove_admin(user)
+        Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_remove_admin.name,
+                   content=p.name, link=p.link)
     return code_list.Success
 

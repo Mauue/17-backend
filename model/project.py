@@ -161,3 +161,8 @@ class Project(db.Model):
                 m.is_admin = False
                 db.session.add(m)
                 db.session.commit()
+
+    @property
+    def link(self):
+        return "task:%s" % self.id
+

@@ -9,6 +9,7 @@ from .csrf import csrf_init_app
 from .project import project_bp
 from flask.json import JSONEncoder
 from datetime import datetime
+from flask_wtf.csrf import CSRFError
 
 blueprint_list = [test_bp, user_bp, project_bp, task_bp, schedule_bp, file_bp]
 
@@ -18,6 +19,9 @@ class _CustomJSONEncoder(JSONEncoder):
         try:
             if isinstance(obj, datetime):
                 return obj.isoformat(sep=' ')
+            elif isinstance(obj, CSRFError):
+                print(obj)
+                return obj
             iterable = iter(obj)
         except TypeError:
             pass

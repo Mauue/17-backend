@@ -1,10 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from .base import response
 from lib.code import code_list
 from db import red, db
 import os
 import settings
-
+from flask_wtf.csrf import generate_csrf
 bp = Blueprint('api', __name__, url_prefix='/api/test')
 
 
@@ -48,3 +48,8 @@ def frontend_pull():
     except Exception as e:
         msg = e
     return response(code_list.Success.with_message(msg))
+
+
+@bp.route('/csrf')
+def get_csrf():
+    return response(code_list.Success, generate_csrf())

@@ -15,8 +15,8 @@ def new_project_controller():
     form = ProjectCreateForm()
     if not form.validate_on_submit():
         return response(code_list.ParamsWrong)
-    id = int(g.user.id)
-    e, d = service.new_project(form.name.data, id)
+    user = g.user
+    e, d = service.new_project(form.name.data, user)
     return response(e, d)
 
 
