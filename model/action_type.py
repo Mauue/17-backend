@@ -37,5 +37,8 @@ task_create = _Type("task_create", "创建了任务")
 task_finish = _Type("task_finish", "完成了任务")
 task_redo = _Type("task_redo", "重做了任务")
 task_update = _Type("task_update", "更新了任务")
+task_delete = _Type("task_delete", "删除了任务")
+task_add_participant = _Type("task_add_participant", "添加了参与者")
+task_remove_participant = _Type("task_remove_participant", "移除了参与者")
 
 

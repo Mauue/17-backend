@@ -164,5 +164,5 @@ class Project(db.Model):
 
     @property
     def link(self):
-        return "task:%s" % self.id
+        return "project:%s" % self.id
 

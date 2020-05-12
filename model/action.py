@@ -34,6 +34,35 @@ class Action(db.Model):
         db.session.commit()
         return a
 
+    @staticmethod
+    def get_list_by_project(project_id):
+        _actions = Action.query.filter_by(project_id=project_id).all()
+        actions = Action._get_list_str(_actions)
+        return actions
+
+    @staticmethod
+    def get_list_by_user(user_id):
+        _actions = Action.query.filter_by(user_id=user_id).all()
+        actions = Action._get_list_str(_actions)
+        return actions
+
+    @staticmethod
+    def _get_list_str(_actions):
+        actions = []
+        for action in _actions:
+            actions.append({
+                "user": {
+                    "username": action.user.username,
+                    "id": action.user.id,
+                    "photo": action.user.photo
+                },
+                "action": action.actionType.content,
+                "content": action.content,
+                "time": action.t_create,
+                "link": action.link
+            })
+        return actions
+
 
 class ActionType(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}

@@ -86,3 +86,7 @@ class Task(db.Model):
 
     def has_participant(self, user):
         return user in self.participants
+
+    @property
+    def link(self):
+        return "task:%s" % self.id

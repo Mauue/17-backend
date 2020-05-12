@@ -1,4 +1,6 @@
 from lib.code import code_list
+from model import action_type
+from model.action import Action
 from model.task import Task
 from model.user import User
 from model.project import Project
@@ -38,48 +40,59 @@ def task_create(project_id, user, name, remarks, t_begin, t_end, priority, label
         if not all([len(la) <= 5 for la in label.split(' ')]):
             return code_list.LabelTooLong
 
-    Task.new(name, p.id, user.id, remarks=remarks, t_begin=t_begin, t_end=t_end,
-             priority=priority, label=label)
+    task = Task.new(name, p.id, user.id, remarks=remarks, t_begin=t_begin, t_end=t_end,
+                    priority=priority, label=label)
+    Action.new(user_id=user.id, project_id=p.id, type_name=action_type.task_create.name,
+               content=name, link=task.link)
     return code_list.Success
 
 
 def task_update(task_id, user, project_id, name, remarks, t_begin, t_end, priority, label, finish):
-    c, project, task = before_task_service(pid=project_id, tid=task_id, user=user)
+    c, p, task = before_task_service(pid=project_id, tid=task_id, user=user)
     if c is not None:
         return c
 
     task.update(name=name, remarks=remarks, t_begin=t_begin,
                 t_end=t_end, priority=priority, label=label, finish=finish)
+    Action.new(user_id=user.id, project_id=p.id, type_name=action_type.task_update.name,
+               content=name, link=task.link)
     return code_list.Success
 
 
 def task_delete(task_id, user, project_id):
-    c, project, task = before_task_service(pid=project_id, tid=task_id, user=user)
+    c, p, task = before_task_service(pid=project_id, tid=task_id, user=user)
     if c is not None:
         return c
 
     task.delete()
+    Action.new(user_id=user.id, project_id=p.id, type_name=action_type.task_delete.name,
+               content=task.name, link=task.link)
     return code_list.Success
 
 
 def task_manage_participant(task_id, user, project_id, participant_id, is_add=True):
-    c, project, task = before_task_service(pid=project_id, tid=task_id, user=user)
+    c, p, task = before_task_service(pid=project_id, tid=task_id, user=user)
     if c is not None:
         return c
 
-    user = User.get_user_by_id(participant_id)
-    if user is None:
+    participant = User.get_user_by_id(participant_id)
+    if participant is None:
         return code_list.UserNotExist
-    if not project.has_member(user):
+    if not p.has_member(participant):
         return code_list.NotInProject
 
     if is_add:
-        if task.has_participant(user):
+        if task.has_participant(participant):
             return code_list.InParticipant
-        task.add_participant(user)
+        task.add_participant(participant)
+        Action.new(user_id=user.id, project_id=p.id,
+                   type_name=action_type.task_add_participant.name,
+                   content=participant.username, link=task.link)
     else:
-        if not task.has_participant(user):
+        if not task.has_participant(participant):
             return code_list.NotInParticipant
-        task.remove_participant(user)
+        task.remove_participant(participant)
+        Action.new(user_id=user.id, project_id=p.id,
+                   type_name=action_type.task_remove_participant.name,
+                   content=participant.username, link=task.link)
     return code_list.Success
-
