@@ -49,6 +49,11 @@ class Task(db.Model):
         db.session.commit()
         return task
 
+    @staticmethod
+    def get_task_by_id(task_id):
+        task = Task.query.filter_by(id=task_id).first()
+        return task
+
     def update(self, name, remarks=None, t_begin=None, t_end=None,
                priority=None, label=None, finish=False):
         self.name = name

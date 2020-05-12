@@ -92,38 +92,23 @@ class Project(db.Model):
                 db.session.commit()
 
     def get_task_list(self):
-        l = []
+        list_ = []
         for task in self.tasks:
             if task.t_delete is not None:
                 continue
-            l.append({
+            list_.append({
                 "id": task.id,
                 "name": task.name,
-                "remarks": task.remarks,
-                "finish": task.finish,
-                "originator": {
-                    "id": task.user_id,
-                    "username": task.originator.username,
-                    "photo": task.originator.photo
-                },
-                "t_begin": task.t_begin,
-                "t_end": task.t_end,
-                "priority": task.priority,
-                "label": task.label,
-                "participants": [{
-                    "id": p.id,
-                    "username": p.username,
-                    "photo": p.photo
-                } for p in task.participants]
+                "finish": task.finish
             })
-        return l
+        return list_
 
     def get_schedule_list(self):
-        l = []
+        list_ = []
         for s in self.schedules:
             if s.t_delete is not None:
                 continue
-            l.append({
+            list_.append({
                 "id": s.id,
                 "content": s.content,
                 "remarks": s.remarks,
@@ -136,7 +121,7 @@ class Project(db.Model):
                 },
                 "label": s.label
             })
-        return l
+        return list_
 
     def has_task(self, task):
         if task.t_delete is not None:
@@ -165,4 +150,3 @@ class Project(db.Model):
     @property
     def link(self):
         return "project:%s" % self.id
-

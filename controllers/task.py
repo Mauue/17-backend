@@ -34,6 +34,19 @@ def task_list(project_id):
         return response(e)
 
 
+@task_bp.route('/project/<project_id>/task/info')
+@login_user_required
+def task_info(project_id):
+    try:
+        pid = int(project_id)
+    except ValueError:
+        return response(code_list.ProjectNoExists)
+    task_id = request.args.get("id")
+    user = g.user
+    e, d = service.get_task_info_by_id(user=user, project_id=pid, task_id=task_id)
+    return response(e, d)
+
+
 @task_bp.route('/project/<project_id>/task/update', methods=['POST'])
 @login_user_required
 def task_update(project_id):

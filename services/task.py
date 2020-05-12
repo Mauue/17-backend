@@ -96,3 +96,30 @@ def task_manage_participant(task_id, user, project_id, participant_id, is_add=Tr
                    type_name=action_type.task_remove_participant.name,
                    content=participant.username, link=task.link)
     return code_list.Success
+
+
+def get_task_info_by_id(user, project_id, task_id):
+    e, p, t = before_task_service(pid=project_id, user=user, tid=task_id)
+    if e is not None:
+        return e, None, None
+    task_info = {
+        "id": t.id,
+        "name": t.name,
+        "remarks": t.remarks,
+        "finish": t.finish,
+        "originator": {
+            "id": t.user_id,
+            "username": t.originator.username,
+            "photo": t.originator.photo
+        },
+        "t_begin": t.t_begin,
+        "t_end": t.t_end,
+        "priority": t.priority,
+        "label": t.label,
+        "participants": [{
+            "id": p.id,
+            "username": p.username,
+            "photo": p.photo
+        } for p in t.participants]
+    }
+    return code_list.Success, task_info
