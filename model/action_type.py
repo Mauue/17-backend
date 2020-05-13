@@ -41,4 +41,7 @@ task_delete = _Type("task_delete", "删除了任务")
 task_add_participant = _Type("task_add_participant", "添加了参与者")
 task_remove_participant = _Type("task_remove_participant", "移除了参与者")
 
+schedule_create = _Type("schedule_create", "创建了日程")
+schedule_update = _Type("schedule_update", "更新了日程")
+schedule_delete = _Type("schedule_delete", "删除了日程")
 

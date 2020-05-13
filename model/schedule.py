@@ -54,3 +54,8 @@ class Schedule(db.Model):
         if s and s.t_delete is not None:
             return None
         return s
+
+    @property
+    def link(self):
+        return "schedule:%s" % self.id
+

@@ -1,4 +1,6 @@
 from lib.code import code_list
+from model import action_type
+from model.action import Action
 from model.schedule import Schedule
 from model.user import User
 from model.project import Project
@@ -36,6 +38,9 @@ def schedule_create(pid, user, content, remarks, t_set, t_remind, label):
 
     s = Schedule.new(content, p.id, user.id, remarks=remarks, t_set=t_set, t_remind=t_remind,
                      label=label)
+    Action.new(user_id=user.id, project_id=p.id,
+               type_name=action_type.schedule_create.name,
+               content=s.content, link=s.link)
     return code_list.Success
 
 
@@ -49,6 +54,9 @@ def schedule_update(sid, pid, user, content, remarks, t_set, label):
             return code_list.LabelTooLong
 
     s.update(content=content, remarks=remarks, t_set=t_set, label=label)
+    Action.new(user_id=user.id, project_id=p.id,
+               type_name=action_type.schedule_update.name,
+               content=s.content, link=s.link)
     return code_list.Success
 
 
@@ -58,5 +66,8 @@ def schedule_delete(sid, pid, user):
         return e
 
     s.delete()
+    Action.new(user_id=user.id, project_id=p.id,
+               type_name=action_type.schedule_delete.name,
+               content=s.content, link=s.link)
     return code_list.Success
 
