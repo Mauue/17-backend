@@ -19,6 +19,10 @@ PrivateBucketName = ""
 PrivateBucketRegion = ""
 PrivateBucketHost = ""
 
+IMAppID = ""
+IMAppSecret = ""
+IMAdmin = ""
+
 try:
     from local import *
 except ModuleNotFoundError:

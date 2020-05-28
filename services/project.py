@@ -2,7 +2,7 @@ from lib.code import code_list
 from model.project import Project
 from model.user import User
 from model.action import Action
-from model import action_type
+from lib.action_list import action_type
 
 
 def before_project_service(pid, user, is_admin=False) -> (code_list.CodeWithMessage, Project):

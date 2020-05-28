@@ -1,5 +1,5 @@
 from lib.code import code_list
-from model import action_type
+from lib.action_list import action_type
 from model.action import Action
 from model.task import Task
 from model.user import User

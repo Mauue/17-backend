@@ -6,7 +6,10 @@ config = {
     "SQLALCHEMY_TRACK_MODIFICATIONS": False,
     "SECRET_KEY": b'IV\xb0\x91]\xd0\xa3V%\x1c\xa0\xe99kt\x1a',
     "WTF_CSRF_ENABLED": False,
-    "REDIS_URL": "redis://:@localhost:6379/0"
+    "REDIS_URL": "redis://:@localhost:6379/0",
+    "IM_APP_ID": IMAppID,
+    "IM_APP_SECRET": IMAppSecret,
+    "IM_ADMIN": IMAdmin
 }
 
 

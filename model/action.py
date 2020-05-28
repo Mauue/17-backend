@@ -1,6 +1,6 @@
 
 from . import db
-from .action_type import type_list
+from lib.action_list.action_type import type_list
 
 type_list = type_list
 

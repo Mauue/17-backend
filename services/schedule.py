@@ -1,8 +1,7 @@
 from lib.code import code_list
-from model import action_type
+from lib.action_list import action_type
 from model.action import Action
 from model.schedule import Schedule
-from model.user import User
 from model.project import Project
 from .project import before_project_service
 

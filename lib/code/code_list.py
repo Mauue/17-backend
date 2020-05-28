@@ -46,6 +46,8 @@ FileNoExists = CodeWithMessage(4001, '文件不存在')
 ScheduleNoExists = CodeWithMessage(5001, '日程不存在')
 
 
+# 群聊模块
+
 # 其他模块
 LabelTooLong = CodeWithMessage(9001, '标签过长')
 
