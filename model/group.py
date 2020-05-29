@@ -72,3 +72,4 @@ class GroupUser(db.Model):
         self.project_id = project_id
         self.t_attend = t_attend
         self.t_delete = t_delete
+

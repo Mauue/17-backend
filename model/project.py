@@ -1,6 +1,7 @@
 from datetime import datetime
 from model.group import Group
 from . import db
+from .im import IM
 
 
 class ProjectUser(db.Model):
@@ -38,11 +39,14 @@ class Project(db.Model):
 
     def delete(self):
         self.t_delete = datetime.now()
+        user_id_list = [m.member.id for m in self.members] + [self.user_id]
+        pid = self.id
         groups = self.groups
         db.session.add(self)
         db.session.commit()
         for group in groups:
             group.delete()
+        IM.delete_account_batch(pid, user_id_list)
 
     def get_project_member_list(self):
         members = [
@@ -88,12 +92,14 @@ class Project(db.Model):
         self.members.append(pu)
         db.session.add(self)
         db.session.commit()
+        r = IM.create_account(project_id=self.id, user_id=user.id)
 
     def remove_member(self, user):
         for m in self.members:
             if m.member == user:
                 db.session.delete(m)
                 db.session.commit()
+                r = IM.delete_account(project_id=self.id, user_id=user.id)
 
     def get_task_list(self):
         list_ = []

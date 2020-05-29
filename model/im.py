@@ -44,6 +44,27 @@ class IM:
         return False
 
     @classmethod
+    def delete_account_batch(cls, project_id, user_id_list):
+        api = "im_open_login_svc/account_delete"
+        data = {
+            "DeleteItem": [
+                {
+                    "UserID": IM.gen_user_identify(user_id=user_id, project_id=project_id)
+                } for user_id in user_id_list
+            ]
+        }
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return True
+        if resp is not None:
+            logging.warning("create_account Error:" + str(resp))
+        return False
+
+    @classmethod
+    def delete_account(cls, project_id, user_id):
+        return cls.delete_account_batch(project_id, [user_id])
+
+    @classmethod
     def check_account(cls, user_id):
         api = "im_open_login_svc/account_check"
         data = {
@@ -83,3 +104,7 @@ class IM:
             return None
         return resp
 
+
+if __name__ == "__main__":
+    print(IM.check_account(IM.gen_user_identify(user_id=7, project_id=28)))
+    pass
