@@ -1,22 +1,50 @@
 from . import db
+from model.im import IM
 
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    im_id = db.Column(db.String(50))
     name = db.Column(db.String(20), nullable=False)
-    is_all = db.Column(db.Boolean, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    t_create = db.Column(db.TIMESTAMP)
-    t_update = db.Column(db.TIMESTAMP)
-    t_delete = db.Column(db.TIMESTAMP)
+    is_all = db.Column(db.Boolean, default=False)
 
-    def __init__(self, name, is_all, user_id, t_create, t_update, t_delete):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), index=True)
+
+    t_create = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    t_update = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now())
+    t_delete = db.Column(db.TIMESTAMP, default=None)
+
+    project = db.relationship("Project", backref="groups")
+    owner = db.relationship("User", backref="own_group")
+
+    def __init__(self, name, is_all, user_id, project_id):
         self.name = name
         self.is_all = is_all
         self.user_id = user_id
-        self.t_create = t_create
-        self.t_update = t_update
-        self.t_delete = t_delete
+        self.project_id = project_id
+
+    @staticmethod
+    def new(name, is_all, user_id, project_id):
+        g = Group(name=name, is_all=is_all, user_id=user_id, project_id=project_id)
+        db.session.add(g)
+        db.session.commit()
+        g.im_id = "@b17#group{gid}".format(gid=g.id)
+        db.session.add(g)
+        db.session.commit()
+        resp = IM.create_group(uid=user_id, gid=g.id, name=name, pid=project_id)
+        if resp is None:
+            return g
+        print("error:", resp)
+        db.session.delete(g)
+        db.session.commit()
+        return None
+
+    def delete(self):
+        gid = self.im_id
+        db.session.delete(self)
+        db.session.commit()
+        IM.destory_group(gid)
 
 
 class GroupChattingRecord(db.Model):

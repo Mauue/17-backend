@@ -11,9 +11,13 @@ class IM:
     admin_user = config["IM_ADMIN"]
     admin_sig = tls_api.gen_sig(admin_user)
 
+    @staticmethod
+    def gen_user_identify(user_id, project_id):
+        return "{pid}-{uid}".format(pid=project_id, uid=user_id)
+
     @classmethod
-    def gen_user_sig(cls, user_id):
-        return cls.tls_api.gen_sig(user_id)
+    def gen_user_sig(cls, user_id, project_id):
+        return cls.tls_api.gen_sig(IM.gen_user_identify(user_id=user_id, project_id=project_id))
 
     @classmethod
     def _send_rest(cls, api, data):
@@ -28,13 +32,9 @@ class IM:
         return loads(r.text)
 
     @classmethod
-    def create_account(cls, user_id, username=None, user_photo=None):
+    def create_account(cls, project_id, user_id):
         api = "im_open_login_svc/account_import"
-        data = {"Identifier": str(user_id)}
-        if username is not None:
-            data["Nick"] = username
-        if user_photo is not None:
-            data["FaceUrl"] = user_photo
+        data = {"Identifier": IM.gen_user_identify(user_id=user_id, project_id=project_id)}
 
         resp = cls._send_rest(api, data)
         if resp and resp["ErrorCode"] == 0:
@@ -55,4 +55,31 @@ class IM:
         if resp and resp["ErrorCode"] == 0:
             return resp["ResultItem"]
         return None
+
+    @classmethod
+    def create_group(cls, uid, name, pid, gid):
+        if not IM.create_account(project_id=pid, user_id=uid):
+            return "cant create account"
+        api = "group_open_http_svc/create_group"
+        data = {
+            "Owner_Account": IM.gen_user_identify(user_id=uid, project_id=pid),
+            "Type": "Private",
+            "Name": name,
+            "GroupId": "@b17#group"+str(gid)
+        }
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return None
+        return resp
+
+    @classmethod
+    def destory_group(cls, gid):
+        api = "group_open_http_svc/destroy_group"
+        data = {
+            "GroupId": gid
+        }
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return None
+        return resp
 

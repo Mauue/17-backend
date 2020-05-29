@@ -10,10 +10,15 @@ import re
 chat_bp = Blueprint('chat', __name__, url_prefix='/api')
 
 
-@chat_bp.route("/chat/get_sig")
+@chat_bp.route("/project/<_project_id>/chat/sig")
 @login_user_required
-def chat_get_sig():
+def chat_get_sig(_project_id):
+    try:
+        pid = int(_project_id)
+    except TypeError:
+        return response(code_list.ProjectNoExists)
+
     user = g.user
-    e, d = service.get_sig(user)
+    e, d = service.get_sig(user=user, project_id=pid)
     return response(e, data=d)
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from model.group import Group
 from . import db
 
 
@@ -33,12 +33,16 @@ class Project(db.Model):
         p = Project(name, user_id)
         db.session.add(p)
         db.session.commit()
+        Group.new(name=name, is_all=True, project_id=p.id, user_id=user_id)
         return p
 
     def delete(self):
         self.t_delete = datetime.now()
+        groups = self.groups
         db.session.add(self)
         db.session.commit()
+        for group in groups:
+            group.delete()
 
     def get_project_member_list(self):
         members = [
