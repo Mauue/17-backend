@@ -15,7 +15,7 @@ chat_bp = Blueprint('chat', __name__, url_prefix='/api')
 def chat_get_sig(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     user = g.user

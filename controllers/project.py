@@ -25,7 +25,7 @@ def new_project_controller():
 def project_info(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
     user = g.user
     c, d = service.project_info(pid, user)
@@ -37,7 +37,7 @@ def project_info(_project_id):
 def project_delete(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
     user = g.user
     c = service.project_delete(pid, user)
@@ -49,7 +49,7 @@ def project_delete(_project_id):
 def project_add_user(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     form = ProjectMemberManageForm()
@@ -67,7 +67,7 @@ def project_add_user(_project_id):
 def project_remove_user(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     form = ProjectMemberManageForm()
@@ -110,7 +110,7 @@ def project_add_admin(_project_id):
 def project_remove_admin(_project_id):
     try:
         pid = int(_project_id)
-    except TypeError:
+    except ValueError:
         return response(code_list.ProjectNoExists)
 
     form = ProjectAdminManageForm()
