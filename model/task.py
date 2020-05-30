@@ -43,15 +43,10 @@ class Task(db.Model):
     @staticmethod
     def new(name, project_id, user_id, remarks=None, t_begin=None, t_end=None,
             priority=None, label=None):
-        task = Task(name, project_id, user_id, remarks=None, t_begin=None, t_end=None,
-                    priority=None, label=None)
+        task = Task(name, project_id, user_id, remarks=remarks, t_begin=t_begin, t_end=t_end,
+                    priority=priority, label=label)
         db.session.add(task)
         db.session.commit()
-        return task
-
-    @staticmethod
-    def get_task_by_id(task_id):
-        task = Task.query.filter_by(id=task_id).first()
         return task
 
     def update(self, name, remarks=None, t_begin=None, t_end=None,

@@ -35,7 +35,6 @@ def task_create(project_id, user, name, remarks, t_begin, t_end, priority, label
     c, p = before_project_service(pid=project_id, user=user)
     if c is not None:
         return c
-
     if len(label) > 5:
         if not all([len(la) <= 5 for la in label.split(' ')]):
             return code_list.LabelTooLong

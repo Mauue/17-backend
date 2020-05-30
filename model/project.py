@@ -166,3 +166,27 @@ class Project(db.Model):
     @property
     def link(self):
         return "project:%s" % self.id
+
+    def get_remind_by_user(self, user):
+        now = datetime.now()
+        list_ = []
+        for s in self.schedules:
+            if s.t_delete is not None or s.t_remind is None or s.t_remind < now:
+                continue
+            list_.append({
+                "type": "schedule:{}".format(s.id),
+                "name": s.content,
+                "t_remind": s.t_remind,
+            })
+        for task in self.tasks:
+            if task.t_delete is not None or task.t_end is None or task.t_end < now or\
+                    task.finish or (task.user_id != user.id and user not in task.participants):
+                continue
+            list_.append({
+                "type": "task:{}".format(task.id),
+                "name": task.name,
+                "t_remind": task.t_end
+            })
+        list_.sort(key=lambda item: item["t_remind"])
+        return list_
+

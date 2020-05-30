@@ -34,6 +34,7 @@ class Schedule(db.Model):
         s = Schedule(content, project_id, user_id, remarks, t_set, t_remind, label)
         db.session.add(s)
         db.session.commit()
+        return s
 
     def update(self, content, remarks, t_set, label):
         self.content = content

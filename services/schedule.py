@@ -35,6 +35,8 @@ def schedule_create(pid, user, content, remarks, t_set, t_remind, label):
         if not all([len(la) <= 5 for la in label.split(' ')]):
             return code_list.LabelTooLong
 
+    if t_remind is None:
+        t_remind = t_set
     s = Schedule.new(content, p.id, user.id, remarks=remarks, t_set=t_set, t_remind=t_remind,
                      label=label)
     Action.new(user_id=user.id, project_id=p.id,

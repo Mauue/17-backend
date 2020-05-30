@@ -46,6 +46,11 @@ class Group(db.Model):
         db.session.commit()
         IM.destory_group(gid)
 
+    @staticmethod
+    def get_by_project_id(project_id):
+        g = Group.query.filter_by(project_id=project_id).all()
+        return g
+
 
 class GroupChattingRecord(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
