@@ -54,7 +54,10 @@ class Project(db.Model):
                 "username": self.originator.username,
                 "id": self.user_id,
                 "identity": "originator",
-                "photo": self.originator.photo
+                "photo": self.originator.photo,
+                "location": self.originator.location,
+                "website": self.originator.website,
+                "tel": self.originator.tel
             }
         ]
         for m in self.members:
@@ -62,7 +65,10 @@ class Project(db.Model):
                 "username": m.member.username,
                 "id": m.member.id,
                 "identity": "admin" if m.is_admin else "member",
-                "photo": m.member.photo
+                "photo": m.member.photo,
+                "location": m.member.location,
+                "website": m.member.website,
+                "tel": m.member.tel
             })
         return members
 
