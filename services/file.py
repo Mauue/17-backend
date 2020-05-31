@@ -16,7 +16,7 @@ def upload_file(project_id, user, file, path):
     if c is not None:
         return c, None
     filename = file.filename if file else ''
-    s = File.upload_file(project_id=project_id, file=file, path=path, filename=filename,
+    s = File.upload_file(project_id=project_id, file=file, path=path or "", filename=filename,
                          tag="upload=%s" % user.id)
     if s:
         return code_list.Success

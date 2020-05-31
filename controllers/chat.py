@@ -13,12 +13,22 @@ chat_bp = Blueprint('chat', __name__, url_prefix='/api')
 @chat_bp.route("/project/<_project_id>/chat/sig")
 @login_user_required
 def chat_get_sig(_project_id):
-    try:
-        pid = int(_project_id)
-    except ValueError:
-        return response(code_list.ProjectNoExists)
+    e, pid = parse_project_id(_project_id)
+    if e:
+        return response(e)
 
     user = g.user
     e, d = service.get_sig(user=user, project_id=pid)
     return response(e, data=d)
 
+
+@chat_bp.route("/project/<_project_id>/chat/group")
+@login_user_required
+def get_user_group(_project_id):
+    e, pid = parse_project_id(_project_id)
+    if e:
+        return response(e)
+
+    user = g.user
+    e, d = service.get_groups(project_id=pid, user=user)
+    return response(e, d)
