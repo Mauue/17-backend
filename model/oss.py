@@ -46,12 +46,12 @@ class _OSS(object):
         for f in oss2.ObjectIterator(bucket=self.private_bucket, prefix=prefix, delimiter='/'):
             if f.key == prefix:
                 continue
-            tag = self.private_bucket.get_object_tagging(f.key)
             if f.is_prefix():
                 file_dict["directory"].append({
                     "name": str(f.key).lstrip(prefix)
                 })
             else:
+                tag = self.private_bucket.get_object_tagging(f.key)
                 file_dict["file"].append({
                     "filename": str(f.key).lstrip(prefix),
                     "upload": tag.tag_set.tagging_rule["upload"],
@@ -66,6 +66,7 @@ class _OSS(object):
             file = ""
             path = path.rstrip('/') + '/'
         result = self.private_bucket.put_object(path, file, headers=headers)
+        print(result)
         success = result.status == HTTPStatus.OK
         return success
 
