@@ -3,6 +3,7 @@ from model.im import IM
 
 
 class Group(db.Model):
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     id = db.Column(db.Integer, primary_key=True)
     im_id = db.Column(db.String(50))
     name = db.Column(db.String(20), nullable=False)
@@ -43,7 +44,7 @@ class Group(db.Model):
     def add(self, uid):
         resp = IM.joinGroup(gid=self.im_id, pid=self.project_id, uid=uid)
         return resp
-    
+
     def remove(self, uid):
         resp = IM.leaveGroup(gid=self.im_id, pid=self.project_id, uid=uid)
         return resp
