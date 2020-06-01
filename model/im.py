@@ -104,6 +104,41 @@ class IM:
             return None
         return resp
 
+    @classmethod
+    def joinGroup(cls, gid, uid, pid):
+        if not IM.create_account(project_id=pid, user_id=uid):
+            return "cant create account"
+        api = "group_open_http_svc/add_group_member"
+        print(gid)
+        data = {
+            "GroupId": str(gid),
+            "Silence": 1,
+            "MemberList": [
+                {
+                    "Member_Account": IM.gen_user_identify(user_id=uid, project_id=pid),
+                }
+            ]
+        }
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return None
+        return resp
+
+    @classmethod
+    def leaveGroup(cls, gid, uid, pid):
+        api = "group_open_http_svc/delete_group_member"
+        data = {
+            "GroupId": str(gid),
+            "Silence": 1,
+            "MemberToDel_Account": [
+                IM.gen_user_identify(user_id=uid, project_id=pid),
+            ]
+        }
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return None
+        return resp
+
 
 if __name__ == "__main__":
     print(IM.check_account(IM.gen_user_identify(user_id=7, project_id=28)))

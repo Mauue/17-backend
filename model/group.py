@@ -40,6 +40,14 @@ class Group(db.Model):
         db.session.commit()
         return None
 
+    def add(self, uid):
+        resp = IM.joinGroup(gid=self.im_id, pid=self.project_id, uid=uid)
+        return resp
+    
+    def remove(self, uid):
+        resp = IM.leaveGroup(gid=self.im_id, pid=self.project_id, uid=uid)
+        return resp
+
     def delete(self):
         gid = self.im_id
         db.session.delete(self)
