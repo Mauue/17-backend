@@ -14,7 +14,7 @@ def get_file_list(project_id, user, prefix):
 def upload_file(project_id, user, file, path):
     c, p = before_project_service(project_id, user)
     if c is not None:
-        return c, None
+        return c
     filename = file.filename if file else ''
     path = path or ""
 

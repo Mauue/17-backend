@@ -38,22 +38,22 @@ class _OSS(object):
         return success, settings.PublicBucketHost + settings.PublicBucketPhotoPath + filename
 
     def get_file_list(self, prefix):
-        print(prefix)
+        l = len(prefix)
         file_dict = {
             "directory": [],
             "file": []
         }
         for f in oss2.ObjectIterator(bucket=self.private_bucket, prefix=prefix, delimiter='/'):
-            if f.key == prefix:
+            if f.key.strip('/') == prefix.strip('/'):
                 continue
             if f.is_prefix():
                 file_dict["directory"].append({
-                    "name": str(f.key).lstrip(prefix)
+                    "name": str(f.key)[l:]
                 })
             else:
                 tag = self.private_bucket.get_object_tagging(f.key)
                 file_dict["file"].append({
-                    "filename": str(f.key).lstrip(prefix),
+                    "filename": str(f.key)[l:],
                     "upload": tag.tag_set.tagging_rule["upload"],
                     "size": f.size
                 })

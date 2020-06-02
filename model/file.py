@@ -23,7 +23,6 @@ class File:
     def upload_file(project_id, path, file, filename, tag):
         path = path.strip('/') + '/' + filename
         path = str(project_id) + '/' + path.strip('/')
-        print(path)
         return oss.upload_file(path=path, file=file, tag=tag)
 
     @staticmethod
@@ -35,7 +34,7 @@ class File:
 
     @staticmethod
     def delete_file(project_id, path):
-        path = str(project_id) + '/' + path.strip('/')
+        path = str(project_id) + '/' + path.lstrip('/')
         if not oss.exist_file(path):
             return None
         return oss.delete_file(path)
