@@ -98,7 +98,7 @@ class Project(db.Model):
         self.members.append(pu)
         db.session.add(self)
         db.session.commit()
-        r = IM.create_account(project_id=self.id, user_id=user.id)
+        r = IM.create_account(project_id=self.id, user=user)
 
     def remove_member(self, user):
         for m in self.members:

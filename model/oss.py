@@ -66,7 +66,6 @@ class _OSS(object):
             file = ""
             path = path.rstrip('/') + '/'
         result = self.private_bucket.put_object(path, file, headers=headers)
-        print(result)
         success = result.status == HTTPStatus.OK
         return success
 
@@ -80,7 +79,6 @@ class _OSS(object):
         return self.private_bucket.delete_object(path)
 
     def delete_files(self, paths):
-        print(paths)
         return self.private_bucket.batch_delete_objects(paths)
 
 

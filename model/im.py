@@ -32,10 +32,33 @@ class IM:
         return loads(r.text)
 
     @classmethod
-    def create_account(cls, project_id, user_id):
+    def create_account(cls, project_id, user):
         api = "im_open_login_svc/account_import"
-        data = {"Identifier": IM.gen_user_identify(user_id=user_id, project_id=project_id)}
+        data = {"Identifier": IM.gen_user_identify(user_id=user.id, project_id=project_id)}
 
+        resp = cls._send_rest(api, data)
+        if resp and resp["ErrorCode"] == 0:
+            return True
+        if resp is not None:
+            logging.warning("create_account Error:" + str(resp))
+        return False
+
+    @classmethod
+    def update_account(cls, project_id, user_id, username, photo):
+        api = "profile/portrait_set"
+        data = {
+            "From_Account": IM.gen_user_identify(user_id=user_id, project_id=project_id),
+            "ProfileItem": [
+                {
+                    "Tag": "Tag_Profile_IM_Nick",
+                    "Value": username,
+                }, {
+                    "Tag": "Tag_Profile_IM_Image",
+                    "Value": photo,
+                }
+            ]
+
+        }
         resp = cls._send_rest(api, data)
         if resp and resp["ErrorCode"] == 0:
             return True
@@ -78,12 +101,12 @@ class IM:
         return None
 
     @classmethod
-    def create_group(cls, uid, name, pid, gid):
-        if not IM.create_account(project_id=pid, user_id=uid):
+    def create_group(cls, user, name, pid, gid):
+        if not IM.create_account(project_id=pid, user=user):
             return "cant create account"
         api = "group_open_http_svc/create_group"
         data = {
-            "Owner_Account": IM.gen_user_identify(user_id=uid, project_id=pid),
+            "Owner_Account": IM.gen_user_identify(user_id=user.id, project_id=pid),
             "Type": "Private",
             "Name": name,
             "GroupId": "@b17#group"+str(gid)
@@ -94,7 +117,7 @@ class IM:
         return resp
 
     @classmethod
-    def destory_group(cls, gid):
+    def destroy_group(cls, gid):
         api = "group_open_http_svc/destroy_group"
         data = {
             "GroupId": gid
@@ -105,8 +128,8 @@ class IM:
         return resp
 
     @classmethod
-    def joinGroup(cls, gid, uid, pid):
-        if not IM.create_account(project_id=pid, user_id=uid):
+    def joinGroup(cls, gid, user, pid):
+        if not IM.create_account(project_id=pid, user=user):
             return "cant create account"
         api = "group_open_http_svc/add_group_member"
         print(gid)
@@ -115,7 +138,7 @@ class IM:
             "Silence": 1,
             "MemberList": [
                 {
-                    "Member_Account": IM.gen_user_identify(user_id=uid, project_id=pid),
+                    "Member_Account": IM.gen_user_identify(user_id=user.id, project_id=pid),
                 }
             ]
         }

@@ -66,14 +66,14 @@ def project_member_manage(project_id, account, admin, is_add=True, account_type=
             return code_list.InProject
 
         p.add_member(user)
-        g.add(user.id)
+        g.add(user)
         Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_join.name,
                    content=p.name, link=p.link)
     else:
         if not p.has_member(user):
             return code_list.NotInProject
         p.remove_member(user)
-        g.remove(user.id)
+        g.remove(user)
         Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_leave.name,
                    content=p.name, link=p.link)
     return code_list.Success

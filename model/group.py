@@ -41,19 +41,20 @@ class Group(db.Model):
         db.session.commit()
         return None
 
-    def add(self, uid):
-        resp = IM.joinGroup(gid=self.im_id, pid=self.project_id, uid=uid)
+    def add(self, user):
+        resp = IM.joinGroup(gid=self.im_id, pid=self.project_id, user=user)
         return resp
 
-    def remove(self, uid):
-        resp = IM.leaveGroup(gid=self.im_id, pid=self.project_id, uid=uid)
+    def remove(self, user):
+        resp = IM.leaveGroup(gid=self.im_id, pid=self.project_id, uid=user.id)
+        resp = IM.delete_account(project_id=self.project_id, user_id=user.id)
         return resp
 
     def delete(self):
         gid = self.im_id
         db.session.delete(self)
         db.session.commit()
-        IM.destory_group(gid)
+        IM.destroy_group(gid)
 
     @staticmethod
     def get_by_project_id(project_id):

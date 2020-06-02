@@ -10,8 +10,8 @@ def get_sig(project_id, user):
     if e is not None:
         return e, None
 
-    success = IM.create_account(user_id=user.id, project_id=project_id)
-
+    success = IM.create_account(user=user, project_id=project_id)
+    IM.update_account(project_id=project_id, user_id=user.id, username=user.username, photo=user.photo)
     data = {
         "app_id": config["IM_APP_ID"],
         "user_id": IM.gen_user_identify(user_id=user.id, project_id=project_id),
@@ -36,3 +36,4 @@ def get_groups(project_id, user):
         } for g in groups
     ]
     return code_list.Success, data
+
