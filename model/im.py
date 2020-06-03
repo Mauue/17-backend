@@ -34,7 +34,11 @@ class IM:
     @classmethod
     def create_account(cls, project_id, user):
         api = "im_open_login_svc/account_import"
-        data = {"Identifier": IM.gen_user_identify(user_id=user.id, project_id=project_id)}
+        data = {
+            "Identifier": IM.gen_user_identify(user_id=user.id, project_id=project_id),
+            "Nick": user.username,
+            "FaceUrl": user.photo or ""
+        }
 
         resp = cls._send_rest(api, data)
         if resp and resp["ErrorCode"] == 0:
@@ -54,11 +58,28 @@ class IM:
                     "Value": username,
                 }, {
                     "Tag": "Tag_Profile_IM_Image",
-                    "Value": photo,
+                    "Value": photo or "",
                 }
             ]
 
         }
+        resp = cls._send_rest(api, data)
+        print(resp, username, photo)
+        if resp and resp["ErrorCode"] == 0:
+            return True
+        if resp is not None:
+            logging.warning("create_account Error:" + str(resp))
+        return False
+
+    @classmethod
+    def get_account_info(cls, project_id, user):
+        api = "profile/portrait_get"
+        data = {
+            "Identifier": IM.gen_user_identify(user_id=user.id, project_id=project_id),
+            "Nick": user.username,
+            "FaceUrl": user.photo or ""
+        }
+
         resp = cls._send_rest(api, data)
         if resp and resp["ErrorCode"] == 0:
             return True

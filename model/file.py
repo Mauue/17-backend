@@ -7,7 +7,9 @@ class File:
 
     @staticmethod
     def get_file_list(project_id, prefix):
-        prefix = str(project_id) + '/' + prefix.lstrip('/')
+        prefix = str(project_id) + '/' + prefix.strip('/')
+        if not prefix.endswith('/'):
+            prefix += '/'
         l = oss.get_file_list(prefix)
         for file in l["file"]:
             id = int(file['upload'])
@@ -43,7 +45,7 @@ class File:
     def delete_files(project_id, paths):
         new_paths = []
         for path in paths:
-            path = str(project_id) + '/' + path.strip('/')
+            path = str(project_id) + '/' + path.lstrip('/')
             new_paths.append(path)
         r = oss.delete_files(new_paths)
         return True

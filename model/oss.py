@@ -70,17 +70,30 @@ class _OSS(object):
         return success
 
     def exist_file(self, path):
+        print(path)
         return self.private_bucket.object_exists(path)
 
     def download_file(self, path):
         return self.private_bucket.sign_url('GET', path, 60)
 
     def delete_file(self, path):
+        print(path)
+        if path.endswith('/'):
+            self.delete_directory(path)
         return self.private_bucket.delete_object(path)
 
     def delete_files(self, paths):
+        print(paths)
+        for path in paths:
+            if path.endswith('/'):
+                self.delete_directory(path)
         return self.private_bucket.batch_delete_objects(paths)
 
+    def delete_directory(self, path):
+        if not path.endswith('/'):
+            return
+        for obj in oss2.ObjectIterator(self.private_bucket, prefix=path):
+            self.private_bucket.delete_object(obj.key)
 
 oss = _OSS()
 
