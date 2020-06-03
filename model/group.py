@@ -26,14 +26,14 @@ class Group(db.Model):
         self.project_id = project_id
 
     @staticmethod
-    def new(name, is_all, user_id, project_id):
-        g = Group(name=name, is_all=is_all, user_id=user_id, project_id=project_id)
+    def new(name, is_all, user, project_id):
+        g = Group(name=name, is_all=is_all, user_id=user.id, project_id=project_id)
         db.session.add(g)
         db.session.commit()
         g.im_id = "@b17#group{gid}".format(gid=g.id)
         db.session.add(g)
         db.session.commit()
-        resp = IM.create_group(uid=user_id, gid=g.id, name=name, pid=project_id)
+        resp = IM.create_group(user=user, gid=g.id, name=name, pid=project_id)
         if resp is None:
             return g
         print("error:", resp)

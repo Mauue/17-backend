@@ -30,11 +30,11 @@ class Project(db.Model):
         self.user_id = user_id
 
     @staticmethod
-    def new(name, user_id):
-        p = Project(name, user_id)
+    def new(name, user):
+        p = Project(name, user.id)
         db.session.add(p)
         db.session.commit()
-        Group.new(name=name, is_all=True, project_id=p.id, user_id=user_id)
+        Group.new(name=name, is_all=True, project_id=p.id, user=user)
         return p
 
     def delete(self):

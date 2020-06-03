@@ -18,7 +18,7 @@ def before_project_service(pid, user, is_admin=False) -> (code_list.CodeWithMess
 
 
 def new_project(name, user):
-    p = Project.new(name, user.id)
+    p = Project.new(name, user)
 
     Action.new(user_id=user.id, project_id=p.id, type_name=action_type.project_create.name,
                content=name, link=p.link)
