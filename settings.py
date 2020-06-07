@@ -17,6 +17,7 @@ PublicBucketPhotoPath = "img/photo/"
 
 PrivateBucketName = ""
 PrivateBucketRegion = ""
+PrivateBucketOutRegion = ""
 PrivateBucketHost = ""
 
 IMAppID = ""

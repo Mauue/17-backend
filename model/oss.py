@@ -15,7 +15,8 @@ class _OSS(object):
                                          settings.PublicBucketName)
         self.private_bucket = oss2.Bucket(self.auth, settings.PrivateBucketRegion,
                                           settings.PrivateBucketName)
-
+        self.private_out_bucket = oss2.Bucket(self.auth, settings.PrivateBucketOutRegion,
+                                              settings.PrivateBucketName)
         try:
             self.public_bucket.get_bucket_info()
         except oss2.exceptions.NoSuchBucket:
@@ -74,7 +75,8 @@ class _OSS(object):
         return self.private_bucket.object_exists(path)
 
     def download_file(self, path):
-        return self.private_bucket.sign_url('GET', path, 60)
+        url = self.private_out_bucket.sign_url('GET', path, 60)
+        return url
 
     def delete_file(self, path):
         print(path)
@@ -95,5 +97,5 @@ class _OSS(object):
         for obj in oss2.ObjectIterator(self.private_bucket, prefix=path):
             self.private_bucket.delete_object(obj.key)
 
-oss = _OSS()
 
+oss = _OSS()
